@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+    <widget xmlns = "http://www.w3.org/ns/widgets"
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        id        = "nl.utwente.db.kickinquest"
+        version   = "1.0.0">
+
+    <!-- versionCode is optional and Android only -->
+
+    <name>Kick In Quest</name>
+
+    <description>
+         The Kick In Quest is a treasure hunt through Enschede as a part of this year's Kick In. 
+    </description>
+
+    <author href="http://www.facebook.com/vdegraaff" email="v.degraaff@utwente.nl">
+        Victor de Graaff
+    </author>
+    
+    <preference name="orientation" value="landscape" />
+    
+    <icon src="icon.png">
+
+</widget>
