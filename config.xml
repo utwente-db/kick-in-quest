@@ -12,6 +12,8 @@
          The Kick In Quest is a treasure hunt through Enschede as a part of this year's Kick In. 
     </description>
 
+    <preference name="orientation" value="landscape" />
     
+    <icon src="icon.png">
 
 </widget>
