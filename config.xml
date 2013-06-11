@@ -18,4 +18,5 @@
     
     <preference name="orientation" value="landscape" />
 
+    <feature name="http://api.phonegap.com/1.0/geolocation"/> 
 </widget>
