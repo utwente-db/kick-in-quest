@@ -12,12 +12,6 @@
          The Kick In Quest is a treasure hunt through Enschede as a part of this year's Kick In. 
     </description>
 
-    <author href="http://www.facebook.com/vdegraaff" email="v.degraaff@utwente.nl">
-        Victor de Graaff
-    </author>
     
-    <preference name="orientation" value="landscape" />
-    
-    <icon src="icon.png">
 
 </widget>
