@@ -1,0 +1,35 @@
+<html>
+ <head>
+  <title>Kick-In Quest</title>
+
+  <link type="text/css" href="css/stylesheet.css" rel="stylesheet" />
+  <script type="text/javascript" src="javascript/cordova.js"></script>
+
+  <script>
+  	function expandAnswers() {
+  		$('.answer').show();
+  	}
+  </script>
+ </head>
+ <body>
+  <div id="wrapper">
+   <div id="background-image" style="background-image: url('images/grote-kerk.png');">
+   	<div id="small-question-box" onClick="expandAnswers();">
+Welke kerk is dit?
+   	</div>
+   	<div class="answer">
+     	Grote kerk
+	</div>
+	<div class="answer">
+     	Oude kerk
+	</div>
+	<div class="answer">
+     	St. Anne kerk
+	</div>
+	<div class="answer">
+     	Antoniuskerk
+	</div>
+   </div>
+  </div>
+ </body>
+</html>
