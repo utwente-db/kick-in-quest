@@ -1,13 +1,10 @@
 // variables
 var gpsTimeoutVal = 60000;
 
-// utility functions
-//var alertWithoutLogging = alert;
-//
-//alert = function(message) {
-//	alertWithoutLogging(message);
-//	console.log(message);
-//}
+// Alias function
+function cl(message) {
+	console.log(message);
+}
 
 // Kick In Quest code
 document.addEventListener("deviceready", onDeviceReady, false);
