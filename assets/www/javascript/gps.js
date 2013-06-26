@@ -1,7 +1,11 @@
 // variables
 var gpsTimeoutVal = 60000;
+var lastPosition;
+var appSDFolder = "KickInQuest";
+var gpsFileName = "gpsdata.txt";
 var watchID = null;
 var fileWriter = null;
+var gpsOn = false;
 
 // Alias function
 function cl(message) {
@@ -28,6 +32,9 @@ function endGPSTracking() {
  * onGPSSuccess receives a Position object
  */
 function onGPSSuccess(position) {
+	gpsOn = true;
+	lastPosition = position;
+	// TODO: (optional) enable the buttons, allow answering the question
 	if (fileWriter != null) {
 		message = "" + position.coords.latitude + "," + position.coords.longitude + "," + position.coords.altitude + "," + position.coords.accuracy
 		+ "," + position.coords.altitudeAccuracy + "," + position.coords.heading + "," + position.coords.speed + "," + position.timestamp + "\n";          		
@@ -42,7 +49,13 @@ function onGPSSuccess(position) {
 function onGPSError(error) {
 	// TODO: write error to log file as well
 	// TODO: remove this alert, for debugging purposes only
-	alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+	// alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+	gpsOn = false;
+	// TODO: (optional) disable the buttons, make the page wait til the GPS signal is back 
+}
+
+function isGpsOn() {
+	return gpsOn;
 }
 
 function getDistance(lat1, lon1, lat2, lon2) {
@@ -65,11 +78,11 @@ function toRad(degrees){
 }
 
 function openFileSystem(fileSystem) {
-	fileSystem.root.getDirectory("KickInQuest", {create: true, exclusive: false}, onGetDirectorySuccess, onGetDirectoryFail);
+	fileSystem.root.getDirectory(appSDFolder, {create: true, exclusive: false}, onGetDirectorySuccess, onGetDirectoryFail);
 }
 
 function onGetDirectorySuccess(directory) {
-	directory.getFile("gpsdata.txt", {create: true, exclusive: false}, createFile, failFE);
+	directory.getFile(gpsFileName, {create: true, exclusive: false}, createFile, failFE);
 }
 
 function createFile(fileEntry) {
@@ -96,14 +109,10 @@ function failFS(evt) {
 
 function failFE(evt) {
 	alert("Opening file for writing failed with error " + evt.code);
-	// alert(evt.target.error.code);
-	//console.log(evt.target.error.code);
 }
 
 function failW(evt) {
 	alert("Creating FileWriter failed with error " + evt.code);
-	//alert(evt.target.error.code);
-	//console.log(evt.target.error.code);
 }
 
 function onGetDirectoryFail(evt) {
