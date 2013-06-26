@@ -73,9 +73,9 @@
 <!--     <feature name="Contacts"> -->
 <!--       <param name="android-package" value="org.apache.cordova.ContactManager"/> -->
 <!--     </feature> -->
-<!--     <feature name="File"> -->
-<!--       <param name="android-package" value="org.apache.cordova.FileUtils"/> -->
-<!--     </feature> -->
+    <feature name="File">
+      <param name="android-package" value="org.apache.cordova.FileUtils"/>
+    </feature>
     <feature name="NetworkStatus">
       <param name="android-package" value="org.apache.cordova.NetworkManager"/>
     </feature>
@@ -85,9 +85,9 @@
     <feature name="Storage">
       <param name="android-package" value="org.apache.cordova.Storage"/>
     </feature>
-<!--     <feature name="FileTransfer"> -->
-<!--       <param name="android-package" value="org.apache.cordova.FileTransfer"/> -->
-<!--     </feature> -->
+    <feature name="FileTransfer">
+      <param name="android-package" value="org.apache.cordova.FileTransfer"/>
+    </feature>
 <!--     <feature name="Capture"> -->
 <!--       <param name="android-package" value="org.apache.cordova.Capture"/> -->
 <!--     </feature> -->
