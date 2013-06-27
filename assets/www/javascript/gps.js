@@ -7,11 +7,6 @@ var watchID = null;
 var fileWriter = null;
 var gpsOn = false;
 
-// Alias function
-function cl(message) {
-	console.log(message);
-}
-
 // Kick In Quest code
 document.addEventListener("deviceready", onDeviceReady, false);
 
