@@ -1,3 +1,6 @@
+var PACKAGE_FILE_PATH = 'http://wwwhome.cs.utwente.nl/~graaffv/kickin/quest.zip';
+var LOCAL_PACKAGE_FILE_NAME = 'quest.zip';
+
 function loadInfoPage(infoText, callBackFunction, buttonText) {
 	$('#infoText').html(infoText);
 	$('#infoButton').html(buttonText);

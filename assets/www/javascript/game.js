@@ -2,6 +2,8 @@ var data;
 var id = 0;
 var questionData;
 
+document.addEventListener('deviceready', loadGame, false);
+
 function loadGame() {
 	// TODO get this from the SD card instead
 	$.getJSON('json/game.json', startGame);
@@ -122,5 +124,3 @@ function loadEnterBuildingQuestion() {
 function getTextItem(label) {
 	return data['textItems'][label];
 }
-
-$(document).ready(loadGame);
