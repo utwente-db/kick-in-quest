@@ -4,7 +4,6 @@ var lastPosition;
 var appSDFolder = "KickInQuest";
 var gpsFileName = "gpsdata.txt";
 var watchID = null;
-var fileWriter = null;
 var gpsOn = false;
 
 // Kick In Quest code
@@ -12,6 +11,8 @@ document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
 	startGPSTracking();
+	
+	// requires file.js
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, openFileSystem, failFS);
 }
 
@@ -34,8 +35,9 @@ function onGPSSuccess(position) {
 		message = "" + position.coords.latitude + "," + position.coords.longitude + "," + position.coords.altitude + "," + position.coords.accuracy
 		+ "," + position.coords.altitudeAccuracy + "," + position.coords.heading + "," + position.coords.speed + "," + position.timestamp + "\n";          		
 		fileWriter.write(message);
-	} else
-		alert("Readonly SD-card;\nPosition at " + position.timestamp + ":\n" + position.coords.latitude + ", " + position.coords.longitude);
+	} else {
+		alert("Readonly SD-card or file.js not loaded;\nPosition at " + position.timestamp + ":\n" + position.coords.latitude + ", " + position.coords.longitude);
+	}
 }
 
 /**
@@ -46,7 +48,7 @@ function onGPSError(error) {
 	// TODO: remove this alert, for debugging purposes only
 	// alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
 	gpsOn = false;
-	// TODO: (optional) disable the buttons, make the page wait til the GPS signal is back 
+	// TODO: (optional) disable the buttons, make the page wait till the GPS signal is back 
 }
 
 function isGpsOn() {
@@ -54,7 +56,7 @@ function isGpsOn() {
 }
 
 function getDistance(lat1, lon1, lat2, lon2) {
-	var R = 6371; // km
+	var R = 6371; // radius of the earth in km
 	var dLat = toRad(lat2-lat1);
 	var dLon = toRad(lon2-lon1);
 	var lat1 = toRad(lat1);
@@ -70,46 +72,4 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
 function toRad(degrees){
     return degrees * Math.PI / 180;
-}
-
-function openFileSystem(fileSystem) {
-	fileSystem.root.getDirectory(appSDFolder, {create: true, exclusive: false}, onGetDirectorySuccess, onGetDirectoryFail);
-}
-
-function onGetDirectorySuccess(directory) {
-	directory.getFile(gpsFileName, {create: true, exclusive: false}, createFile, failFE);
-}
-
-function createFile(fileEntry) {
-	fileEntry.createWriter(createFileWriter, failW);
-}
-
-function createFileWriter(writer) {
-	/*
-    writer.onwriteend = function(evt) {
-    	alert("success writing file");
-    };
-    */
-	fileWriter = writer;
-	fileWriter.write("Latitude,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
-}
-
-function failFS(evt) {
-	alert("Opening file System failed with error " + evt.code);
-	//alert(evt.code);
-	//alert(evt.message);
-	//alert(evt.target.error.code);
-	//console.log(evt.target.error.code);
-}
-
-function failFE(evt) {
-	alert("Opening file for writing failed with error " + evt.code);
-}
-
-function failW(evt) {
-	alert("Creating FileWriter failed with error " + evt.code);
-}
-
-function onGetDirectoryFail(evt) {
-	alert("Creating directory failed with error " + evt.code);
 }
