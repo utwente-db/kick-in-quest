@@ -25,7 +25,10 @@ function createFileWriter(writer) {
 	 * writer.onwriteend = function(evt) { alert("success writing file"); };
 	 */
 	fileWriter = writer;
-	fileWriter.write("Latitude,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
+	if (fileWriter.length == 0)
+		fileWriter.write("Latitude,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
+	else
+		fileWriter.seek(fileWriter.length);
 }
 
 function failFS(evt) {
