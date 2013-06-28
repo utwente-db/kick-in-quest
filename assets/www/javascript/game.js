@@ -74,7 +74,7 @@ function checkLocation() {
 		var latExpected = questionData['latitude'];
 		var lonExpected = questionData['longitude'];
 		
-		var distance = getDistance(lat, lon, latExpected, lonExpected) * 1000;
+		var distance = getDistance(lat, lon, latExpected, lonExpected);
 		
 		message = getTextItem('LOCATION_WILL_BE_CHECKED') + ' ' + getTextItem('FOUND_COORDINATES') + ':<br/><br/>N '
 		  		  + lastPosition.coords.latitude.toFixed(6) + '<br/>E ' + lastPosition.coords.longitude.toFixed(6) + '<br/><br/>';
