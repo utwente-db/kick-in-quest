@@ -6,8 +6,6 @@
 
 var id = 0;
 var data;
-var teamId = getGETParam('teamId');
-var language = getGETParam('language');
 
 document.addEventListener('deviceready', loadInfo, false);
 $(document).bind('game:loaded', initInfoScreen);
@@ -33,7 +31,7 @@ function nextInfoItem() {
 	id++;
 	
 	if (typeof data[id] == 'undefined') {
-		document.location = 'game.html';
+		document.location = 'game.html?language=' + language + '&teamId=' + teamId;
 		return;
 	}
 	
