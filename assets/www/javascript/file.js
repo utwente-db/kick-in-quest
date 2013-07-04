@@ -1,19 +1,20 @@
-// Store GPS data to SD-Card
-
 var fileWriter = null;
+var fileSystem = null;
 
-function openFileSystem(fileSystem) {
-	fileSystem.root.getDirectory(appSDFolder, {
-		create : true,
-		exclusive : false
-	}, onGetDirectorySuccess, onGetDirectoryFail);
+function initFileSystem(callBackFunction) {
+	if (fileSystem != undefined) {
+		callBackFunction();
+		return;
+	}
+	
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function fileSystemInitialized(fileSystem) {
+		openFileSystem(fileSystem, callBackFunction);
+	}, failFS);
 }
 
-function onGetDirectorySuccess(directory) {
-	directory.getFile(gpsFileName, {
-		create : true,
-		exclusive : false
-	}, createFile, failFE);
+function openFileSystem(fileSystemParam, callBackFunction) {
+	fileSystem = fileSystemParam;
+	callBackFunction();
 }
 
 function createFile(fileEntry) {
@@ -25,6 +26,9 @@ function createFileWriter(writer) {
 	 * writer.onwriteend = function(evt) { alert("success writing file"); };
 	 */
 	fileWriter = writer;
+	
+	console.log('--=-------------------------');
+	console.log(fileWriter);
 	if (fileWriter.length == 0)
 		fileWriter.write("Latitude,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
 	else
@@ -53,8 +57,6 @@ function onGetDirectoryFail(evt) {
 
 // Upload GPS data to Server using HTTP POST
 // TODO: test this on a real server!
-// TODO: check if we want to automatically have sourceFileURI be something like /sdcard/appSDFolder/gpsFileName
-
 function uploadFile(sourceFileURI, serverURI) {
     var options = new FileUploadOptions();
     options.fileKey="file";
@@ -105,8 +107,8 @@ function gotFileEntry(fileEntry, downloadURI, destinationFileName) {
 }
 
 function downloadSuccess(theFile)  {
-	console.log("download complete: " + theFile.toURI());
-	showLink(theFile.toURI());
+	console.log("download complete: " + theFile.toURL());
+//	showLink(theFile.toURL());
 }
 
 function downloadError(error) {

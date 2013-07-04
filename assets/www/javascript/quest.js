@@ -1,5 +1,7 @@
 var PACKAGE_FILE_PATH = 'http://wwwhome.cs.utwente.nl/~graaffv/kickin/quest.zip';
 var LOCAL_PACKAGE_FILE_NAME = 'quest.zip';
+var FILE_SYSTEM_HOME = 'KickInQuest';
+var KICK_IN_QUEST_HOME = 'file:///mnt/sdcard/' + FILE_SYSTEM_HOME;
 
 function loadInfoPage(infoText, callBackFunction, buttonText) {
 	$('#infoText').html(infoText);
