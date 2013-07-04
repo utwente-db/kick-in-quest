@@ -6,6 +6,8 @@
 
 var id = 0;
 var data;
+var teamId = getGETParam('teamId');
+var language = getGETParam('language');
 
 document.addEventListener('deviceready', loadInfo, false);
 $(document).bind('game:loaded', initInfoScreen);

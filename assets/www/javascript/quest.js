@@ -21,3 +21,18 @@ function cl(message) {
 function asWarning(message) {
 	return '<span class="warning">' + message + '</span>';
 }
+
+function getGETParam(paramName) {
+	var paramValuePairs = window.location.search.substring(1).split('&');
+	var result = undefined;
+
+	for (var i = 0; i < paramValuePairs.length; i++) {
+		var paramValueArray = paramValuePairs[i].split('=');
+		
+		if (paramValueArray[0] == paramName) {
+			result = paramValueArray[1];
+		}
+	}
+	
+	return result;
+}
