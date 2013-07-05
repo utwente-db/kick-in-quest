@@ -1,9 +1,11 @@
 // Store GPS data to SD-Card
 
 var fileWriter = null;
+var zipFile = null;
+var applicationDirectory = null;
 
 function openFileSystem(fileSystem) {
-	fileSystem.root.getDirectory(appSDFolder, {
+	fileSystem.root.getDirectory(LOCAL_APP_FOLDER, {
 		create : true,
 		exclusive : false
 	}, onGetDirectorySuccess, onGetDirectoryFail);
@@ -84,9 +86,21 @@ function onUploadFail(error) {
  * Source: https://gist.github.com/nathanpc/2464060
  */
 function downloadFile(downloadURI, destinationFileName) {
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, openAppFileSystem, failFS); // initialize the applicationDirectory for unzipping
 	window.requestFileSystem(
 					LocalFileSystem.PERSISTENT,
 					0, function(fileSystem) { onFileSystemSuccess(fileSystem, downloadURI, destinationFileName); }, fail);
+}
+
+function openAppFileSystem(fileSystem) {
+	fileSystem.root.getDirectory(LOCAL_APP_FOLDER, {
+		create : true,
+		exclusive : false
+	}, onGetAppDirectory, onGetDirectoryFail);
+}
+
+function onGetAppDirectory(directory) {
+	applicationDirectory = directory;
 }
 
 function onFileSystemSuccess(fileSystem, downloadURI, destinationFileName) {
@@ -105,8 +119,50 @@ function gotFileEntry(fileEntry, downloadURI, destinationFileName) {
 }
 
 function downloadSuccess(theFile)  {
+	if (applicationDirectory != null)
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, openFileSystemRead, failFS);
+	else
+		alert("application directory was null");
 	console.log("download complete: " + theFile.toURI());
 	showLink(theFile.toURI());
+}
+
+function openFileSystemRead(fileSystem) {
+	fileSystem.root.getFile(LOCAL_PACKAGE_FILE_NAME, {
+		exclusive : false
+	}, readFileEntry, failFE);
+}
+
+function readFileEntry(fileEntry) {
+	fileEntry.file(readFile, fail);
+}
+
+function readFile(file) {
+	 var reader = new FileReader();
+	 reader.onload = function(evt) {
+		 var data = evt.target.result.substring(28); // strip the string "data:application/zip;base64," from the data
+		 zipFile = new JSZip(data, {base64: true});
+         for (filename in zipFile.files) {
+             var options = zipFile.files[filename].options || {};
+             //alert((options.dir ? "directory = '" : "file = '") + filename + "' data = '" + zipFile.files[filename].data + "'");
+        	 if (options.dir)
+        		 applicationDirectory.getDirectory(filename, {create : true, exclusive : false}, null, failFE);
+        	 else
+        		 applicationDirectory.getFile(filename, {create : true, exclusive : false}, storeUnzippedFile, failFE);
+         }
+
+	 };
+	 //reader.readAsArrayBuffer(file);
+	 reader.readAsDataURL(file);	 
+}
+
+function storeUnzippedFile(fileEntry) {
+	fileEntry.createWriter(storeUnzippedFileWriter, failW);
+}
+
+function storeUnzippedFileWriter(writer) {
+	var fileName = writer.fileName.substring(writer.fileName.indexOf(LOCAL_APP_FOLDER) + LOCAL_APP_FOLDER.length + 1);
+	writer.write(zipFile.files[fileName].data);
 }
 
 function downloadError(error) {
