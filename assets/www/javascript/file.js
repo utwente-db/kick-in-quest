@@ -5,7 +5,7 @@ var zipFile = null;
 var applicationDirectory = null;
 
 function openFileSystem(fileSystem) {
-	fileSystem.root.getDirectory(LOCAL_APP_FOLDER, {
+	fileSystem.root.getDirectory(FILE_SYSTEM_HOME, {
 		create : true,
 		exclusive : false
 	}, onGetDirectorySuccess, onGetDirectoryFail);
@@ -27,6 +27,9 @@ function createFileWriter(writer) {
 	 * writer.onwriteend = function(evt) { alert("success writing file"); };
 	 */
 	fileWriter = writer;
+	
+	console.log('--=-------------------------');
+	console.log(fileWriter);
 	if (fileWriter.length == 0)
 		fileWriter.write("Latitude,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
 	else
@@ -55,8 +58,6 @@ function onGetDirectoryFail(evt) {
 
 // Upload GPS data to Server using HTTP POST
 // TODO: test this on a real server!
-// TODO: check if we want to automatically have sourceFileURI be something like /sdcard/appSDFolder/gpsFileName
-
 function uploadFile(sourceFileURI, serverURI) {
     var options = new FileUploadOptions();
     options.fileKey="file";
@@ -93,7 +94,7 @@ function downloadFile(downloadURI, destinationFileName) {
 }
 
 function openAppFileSystem(fileSystem) {
-	fileSystem.root.getDirectory(LOCAL_APP_FOLDER, {
+	fileSystem.root.getDirectory(FILE_SYSTEM_HOME, {
 		create : true,
 		exclusive : false
 	}, onGetAppDirectory, onGetDirectoryFail);
@@ -124,7 +125,7 @@ function downloadSuccess(theFile)  {
 	else
 		alert("application directory was null");
 	console.log("download complete: " + theFile.toURI());
-	showLink(theFile.toURI());
+//	showLink(theFile.toURI());
 }
 
 function openFileSystemRead(fileSystem) {
@@ -161,7 +162,7 @@ function storeUnzippedFile(fileEntry) {
 }
 
 function storeUnzippedFileWriter(writer) {
-	var fileName = writer.fileName.substring(writer.fileName.indexOf(LOCAL_APP_FOLDER) + LOCAL_APP_FOLDER.length + 1);
+	var fileName = writer.fileName.substring(writer.fileName.indexOf(FILE_SYSTEM_HOME) + FILE_SYSTEM_HOME.length + 1);
 	writer.write(zipFile.files[fileName].data);
 }
 

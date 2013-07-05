@@ -5,8 +5,7 @@ var questionData;
 document.addEventListener('deviceready', loadGame, false);
 
 function loadGame() {
-	// TODO get this from the SD card instead
-	$.getJSON('json/game.json', startGame);
+	$.get(KICK_IN_QUEST_HOME + '/game.json', startGame);
 }
 
 function resetPage() {
@@ -14,7 +13,7 @@ function resetPage() {
 }
 
 function startGame(receivedData) {
-	data = receivedData;
+	data = JSON.parse(receivedData);
 	nextQuestion();
 }
 
@@ -23,11 +22,12 @@ function nextQuestion() {
 	
 	if (data[id] == undefined) {
 		finishGame();
+		return;
 	}
 	
 	questionData = data[id];
 	
-	$('#backgroundImage').css('background-image', 'url(\'' + data[id]['image'] + '\')');
+	$('#backgroundImage').css('background-image', 'url(\'' + KICK_IN_QUEST_HOME + '/' + questionData['image'] + '\')');
 	loadQuestionPage();
 }
 
