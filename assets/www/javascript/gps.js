@@ -1,7 +1,6 @@
 // variables
 var gpsTimeoutVal = 60000;
 var lastPosition;
-var appSDFolder = "KickInQuest";
 var gpsFileName = "gpsdata.txt";
 var watchID = null;
 var gpsOn = false;
