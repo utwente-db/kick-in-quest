@@ -91,6 +91,10 @@
 	display: 		none;
 }
 
+.gameBox.infoBox {
+	height:			69%;
+}
+
 .warning {
 	color:			red;
 }
@@ -99,4 +103,25 @@ input {
 	border:			0.3em solid green;
 	border-radius:  0.2em;
 	color:			green;
+}
+
+#score {
+	float:			left;
+}
+
+#remainingTime {
+	float: 			right;
+}
+
+.scoreBox {
+	padding:		0.2em;
+	background-color: white;
+}
+
+.scoreBox img {
+	height:			20px;
+}
+
+.scoreBox .spacer {
+ 	height:			20px;
 }

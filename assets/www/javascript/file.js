@@ -35,8 +35,6 @@ function createFileWriter(writer) {
 	 */
 	fileWriter = writer;
 	
-	console.log('--=-------------------------');
-	console.log(fileWriter);
 	if (fileWriter.length == 0)
 		fileWriter.write("Latitude,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
 	else
