@@ -7,6 +7,10 @@
 var id = 0;
 var data;
 
+var SERVER_NUMBER = getGETParam('teamId').substring(3);
+var PACKAGE_FILE_PATH = 'http://farm' + SERVER_NUMBER + '.ewi.utwente.nl:8080/kick-in-quest-server/GetQuestions?language=' + language + '&teamId=' + teamId;
+var LOCAL_PACKAGE_FILE_NAME = 'quest.zip';
+
 document.addEventListener('deviceready', loadInfo, false);
 $(document).bind('game:loaded', initInfoScreen);
 
@@ -19,7 +23,7 @@ function loadInfo() {
 }
 
 function initInfoScreen() {
-	$.get(KICK_IN_QUEST_HOME + '/info.json', startInfoScreen);
+	$.get(KICK_IN_QUEST_HOME + '/json/info.json', startInfoScreen);
 }
 
 function startInfoScreen(receivedData) {
@@ -46,7 +50,7 @@ function downloadPackage() {
 	// zip.workerScriptsPath = "javascript/lib/";
 	
 	//new ZipFile(PACKAGE_FILE_PATH, extractEntries);
-	downloadFile(PACKAGE_FILE_PATH, LOCAL_PACKAGE_FILE_NAME);
+//	downloadFile(PACKAGE_FILE_PATH, LOCAL_PACKAGE_FILE_NAME);
 //	initFileSystem(extractQuestionPackage);
 }
 

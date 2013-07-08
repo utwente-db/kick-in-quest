@@ -3,19 +3,26 @@
 var fileWriter = null;
 var zipFile = null;
 var applicationDirectory = null;
+var fileSystem = null;
 
-function openFileSystem(fileSystem) {
+function initFileSystem(callBackFunction) {
+	if (fileSystem != undefined) {
+		callBackFunction();
+		return;
+	}
+	
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function fileSystemInitialized(fileSystem) {
+		openFileSystem(fileSystem, callBackFunction);
+	}, failFS);
+}
+
+function openFileSystem(fileSystemParam, callBackFunction) {
+	fileSystem = fileSystemParam;
+	
 	fileSystem.root.getDirectory(FILE_SYSTEM_HOME, {
 		create : true,
 		exclusive : false
-	}, onGetDirectorySuccess, onGetDirectoryFail);
-}
-
-function onGetDirectorySuccess(directory) {
-	directory.getFile(gpsFileName, {
-		create : true,
-		exclusive : false
-	}, createFile, failFE);
+	}, callBackFunction, onGetDirectoryFail);
 }
 
 function createFile(fileEntry) {

@@ -1,17 +1,21 @@
-var PACKAGE_FILE_PATH = 'http://wwwhome.cs.utwente.nl/~graaffv/kickin/quest.zip';
-var LOCAL_PACKAGE_FILE_NAME = 'quest.zip';
-var FILE_SYSTEM_HOME = 'KickInQuest' + getGETParam('teamId');
-var KICK_IN_QUEST_HOME = 'file:///mnt/sdcard/' + FILE_SYSTEM_HOME;
 var teamId = getGETParam('teamId');
 var language = getGETParam('language');
 
+var FILE_SYSTEM_HOME = 'KickInQuest' + teamId;
+//TODO: overwrite this for iOS
+var KICK_IN_QUEST_HOME = 'file:///mnt/sdcard/' + FILE_SYSTEM_HOME;
+
 function loadInfoPage(infoText, callBackFunction, buttonText) {
-	$('#infoText').html(infoText);
-	$('#infoButton').html(buttonText);
+	$('.infoText').html(infoText);
+	loadInfoButton(callBackFunction, buttonText);
+}
+
+function loadInfoButton(callBackFunction, buttonText) {
+	$('.infoButton').html(buttonText);
 	
 	// Stop previous handlers for this button
-	$('#infoButton').unbind('click');
-	$('#infoButton').click(callBackFunction);
+	$('.infoButton').unbind('click');
+	$('.infoButton').click(callBackFunction);
 }
 
 function cl(message) {
@@ -37,4 +41,15 @@ function getGETParam(paramName) {
 	}
 	
 	return result;
+}
+
+function levenshteinDistance (s, t) {
+    if (!s.length) return t.length;
+    if (!t.length) return s.length;
+
+    return Math.min(
+            levenshteinDistance(s.substr(1), t) + 1,
+            levenshteinDistance(t.substr(1), s) + 1,
+            levenshteinDistance(s.substr(1), t.substr(1)) + (s[0] !== t[0] ? 1 : 0)
+    );
 }

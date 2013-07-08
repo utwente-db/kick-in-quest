@@ -79,7 +79,7 @@
 .infoButtonContainer {
 }
 
-#infoButton {
+.infoButton, submit {
 	background-color: green;
 	color:			white;
 	font-weight: 	bold;

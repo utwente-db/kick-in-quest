@@ -15,7 +15,7 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
 	startGPSTracking();
 	
-	initFileSystem(getGPSDirectory);
+	initFileSystem(createGPSFile);
 }
 
 function startGPSTracking() {
@@ -107,13 +107,6 @@ function getEllipsoidalDistance(lat1, lon1, lat2, lon2) {
 	var s4 = s2*s2;
 	var d = N1*s*(1.0-s2*H*H*(1.0-H*H)/6+(s*s2/8)*G*H*(1-2*H*H) + (s4/120)*(H*H*(4-7*H*H)-3*G*G*(1-7*H*H)) - (s4*s/48)*G*H);
 	return d;
-}
-
-function getGPSDirectory() {
-	fileSystem.root.getDirectory(FILE_SYSTEM_HOME, {
-		create : true,
-		exclusive : false
-	}, createGPSFile, onGetDirectoryFail);
 }
 
 function createGPSFile(directory) {

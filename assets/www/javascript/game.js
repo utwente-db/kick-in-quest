@@ -5,7 +5,7 @@ var questionData;
 document.addEventListener('deviceready', loadGame, false);
 
 function loadGame() {
-	$.get(KICK_IN_QUEST_HOME + '/game.json', startGame);
+	$.get(KICK_IN_QUEST_HOME + '/json/game.json', startGame);
 }
 
 function resetPage() {
@@ -27,6 +27,7 @@ function nextQuestion() {
 	
 	questionData = data[id];
 	
+	console.log(KICK_IN_QUEST_HOME + '/' + questionData['image']);
 	$('#backgroundImage').css('background-image', 'url(\'' + KICK_IN_QUEST_HOME + '/' + questionData['image'] + '\')');
 	loadQuestionPage();
 }
@@ -42,17 +43,18 @@ function closeGame() {
 function answerQuestion(answer) {
 	resetPage();
 
-	var correct = (answer == questionData['correctAnswer']);
+	var isCorrect = (levenshteinDistance(answer, questionData['correctAnswer']) / answer.length) <= 0.25;
 
 	$('.answerCheck').css('display', 'block');
 	
 	var message = getTextItem('THE_ANSWER_IS') + ' ' + 
-				  (correct ? getTextItem('CORRECT') : getTextItem('WRONG')) + '.<br/>' +
+				  (isCorrect ? getTextItem('CORRECT') : getTextItem('WRONG')) + '.<br/>' +
+				  questionData['explanation'] + "<br/><br/>" +
 				  getTextItem('NEW_INFORMATION') + '<br/><br/>';
+	
 	// TODO: geen nieuwe informatie in geval fout antwoord
 	// TODO: bijhouden welke informatie bekend is
-	// TODO toevoegen aan message:
-	// informatie over het eindpunt
+	// TODO toevoegen aan message: informatie over het eindpunt, zoals in game.json
 	message += 'N 52.236667<br/>E 6.8375';
 	message += '<br/><br/>';
 	
@@ -109,8 +111,27 @@ function loadMultipleChoiceQuestion() {
 	
 	$('.answer').each(function(index, element) {
 		$(element).html(questionData['answers'][element.id]);
+		
+		$(element).unbind('click');
 		$(element).click(function() { answerQuestion($(this).attr('id')); });
 	});
+}
+
+function loadOpenQuestion() {
+	$('.infoText').html(questionData['question']);
+	$('#answer').val('');
+	
+	loadInfoButton(checkOpenQuestion, getTextItem('TO_ANSWER'));
+}
+
+function checkOpenQuestion() {
+	var answer = $('#answer').val();
+	
+	if (answer == '') {
+		return false;
+	}
+	
+	answerQuestion(answer);
 }
 
 function loadEnterBuildingQuestion() {
@@ -122,5 +143,9 @@ function loadEnterBuildingQuestion() {
 }
 
 function getTextItem(label) {
+	if (typeof data['textItems'][label] == 'undefined') {
+		return label;
+	}
+	
 	return data['textItems'][label];
 }
