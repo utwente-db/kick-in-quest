@@ -27,8 +27,6 @@ public class KickInQuestActivity extends DroidGap {
 
 		super.setIntegerProperty("loadUrlTimeoutValue", 60000);
 		
-		// TODO change this back to:
-		// "file:///android_asset/www/index.html"
-		super.loadUrl("file:///android_asset/www/game.html?teamId=AAA06&language=nl");
+		super.loadUrl("file:///android_asset/www/index.html");
 	}
 }
