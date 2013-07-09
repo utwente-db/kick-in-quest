@@ -15,11 +15,7 @@ document.addEventListener('deviceready', loadInfo, false);
 $(document).bind('game:loaded', initInfoScreen);
 
 function loadInfo() {
-// TODO: Bas is doing this
-	downloadPackage();
-	
-	// TODO trigger 'game:loaded' after unzipping instead of doing this here
-	$(document).trigger('game:loaded');
+	downloadPackage(initInfoScreen); // do not supply "$(document).trigger('game:loaded')" as a parameter, because it is executed immediately 
 }
 
 function initInfoScreen() {
@@ -42,16 +38,14 @@ function nextInfoItem() {
 	loadInfoPage(data[id]['infoText'], nextInfoItem, data[id]['buttonText']);
 }
 
-function downloadPackage() {
-	// TODO: check first if file has been downloaded and extracted already
+function downloadPackage(callBack) {
 	// TODO: base local file path on team id for testing purposes
 
 	// TODO: Only necessary when using ZipJS. Remove?
 	// zip.workerScriptsPath = "javascript/lib/";
 	
 	//new ZipFile(PACKAGE_FILE_PATH, extractEntries);
-//	downloadFile(PACKAGE_FILE_PATH, LOCAL_PACKAGE_FILE_NAME);
-//	initFileSystem(extractQuestionPackage);
+	downloadFile(PACKAGE_FILE_PATH, LOCAL_PACKAGE_FILE_NAME, callBack);
 }
 
 function extractEntries(zip) {

@@ -4,6 +4,9 @@ var fileWriter = null;
 var zipFile = null;
 var applicationDirectory = null;
 var fileSystem = null;
+var filesInZip = 0;
+var extractedFiles = 0;
+var callBack = null;
 
 function initFileSystem(callBackFunction) {
 	if (fileSystem != undefined) {
@@ -79,7 +82,8 @@ function onUploadFail(error) {
  * DOWNLOAD FILE
  * Source: https://gist.github.com/nathanpc/2464060
  */
-function downloadFile(downloadURI, destinationFileName) {
+function downloadFile(downloadURI, destinationFileName, callBackFunction) {
+	callBack = callBackFunction;
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, openAppFileSystem, failFS); // initialize the applicationDirectory for unzipping
 	window.requestFileSystem(
 					LocalFileSystem.PERSISTENT,
@@ -136,18 +140,46 @@ function readFile(file) {
 	 reader.onload = function(evt) {
 		 var data = evt.target.result.substring(28); // strip the string "data:application/zip;base64," from the data
 		 zipFile = new JSZip(data, {base64: true});
-         for (filename in zipFile.files) {
-             var options = zipFile.files[filename].options || {};
-             //alert((options.dir ? "directory = '" : "file = '") + filename + "' data = '" + zipFile.files[filename].data + "'");
-        	 if (options.dir)
-        		 applicationDirectory.getDirectory(filename, {create : true, exclusive : false}, null, failFE);
-        	 else
-        		 applicationDirectory.getFile(filename, {create : true, exclusive : false}, storeUnzippedFile, failFE);
-         }
-
+		 createZipFolders();
 	 };
 	 //reader.readAsArrayBuffer(file);
 	 reader.readAsDataURL(file);	 
+}
+
+function createZipFolders() {
+	 var foldersInZip = 0;
+     for (filename in zipFile.files) {
+         var options = zipFile.files[filename].options || {};
+    	 if (options.dir)
+    		 ++foldersInZip;
+     }
+     var createdFolders = 0;
+     var onCreateDirectory = function(parent) {
+    	 ++createdFolders;
+    	 if (createdFolders >= foldersInZip) {
+    		 writeZipFiles();
+    	 }
+     }
+     for (filename in zipFile.files) {
+         var options = zipFile.files[filename].options || {};
+    	 if (options.dir)
+    		 applicationDirectory.getDirectory(filename, {create : true, exclusive : false}, onCreateDirectory, failFE);
+     }
+}
+
+function writeZipFiles() {
+	filesInZip = 0;
+    for (filename in zipFile.files) {
+        var options = zipFile.files[filename].options || {};
+        if (!options.dir)
+        	++filesInZip;
+    }
+    extractedFiles = 0;
+    for (filename in zipFile.files) {
+        var options = zipFile.files[filename].options || {};
+        if (!options.dir)
+        	applicationDirectory.getFile(filename, {create : true, exclusive : false}, storeUnzippedFile, failFE);
+    }
 }
 
 function storeUnzippedFile(fileEntry) {
@@ -155,6 +187,12 @@ function storeUnzippedFile(fileEntry) {
 }
 
 function storeUnzippedFileWriter(writer) {
+	writer.onwriteend = function(evt) {
+		++extractedFiles;
+		if (extractedFiles >= filesInZip) {
+			callBack();
+		}
+	}
 	var fileName = writer.fileName.substring(writer.fileName.indexOf(FILE_SYSTEM_HOME) + FILE_SYSTEM_HOME.length + 1);
 	writer.write(zipFile.files[fileName].data);
 }
