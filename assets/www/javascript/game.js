@@ -147,9 +147,11 @@ function checkOpenQuestion() {
 	var answer = $('#answer').val();
 	
 	if (answer == '') {
+		$('#answer').css('border-color', 'red');
 		return false;
 	}
 	
+	$('#answer').css('border-color', 'green');
 	answerQuestion(answer);
 }
 

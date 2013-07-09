@@ -8,6 +8,7 @@ var lastPosition;
 var gpsFileName = "gpsdata.txt";
 var watchID = null;
 var gpsOn = false;
+var gpsFileWriter = null;
 
 // Kick In Quest code
 document.addEventListener("deviceready", onDeviceReady, false);
@@ -113,5 +114,17 @@ function createGPSFile(directory) {
 	directory.getFile(gpsFileName, {
 		create : true,
 		exclusive : false
-	}, createFile, failFE);
+	}, createGPSFileWriter, failFE);
+}
+
+function createGPSFileWriter(writer) {
+	/*
+	 * writer.onwriteend = function(evt) { alert("success writing file"); };
+	 */
+	gpsFileWriter = writer;
+	
+	if (fileWriter.length == 0)
+		fileWriter.write("Latitude,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
+	else
+		fileWriter.seek(fileWriter.length);
 }

@@ -25,20 +25,8 @@ function openFileSystem(fileSystemParam, callBackFunction) {
 	}, callBackFunction, onGetDirectoryFail);
 }
 
-function createFile(fileEntry) {
-	fileEntry.createWriter(createFileWriter, failW);
-}
-
-function createFileWriter(writer) {
-	/*
-	 * writer.onwriteend = function(evt) { alert("success writing file"); };
-	 */
-	fileWriter = writer;
-	
-	if (fileWriter.length == 0)
-		fileWriter.write("Latitude,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
-	else
-		fileWriter.seek(fileWriter.length);
+function createFile(fileEntry, callbackFunction) {
+	fileEntry.createWriter(callbackFunction, failW);
 }
 
 function failFS(evt) {
