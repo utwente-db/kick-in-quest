@@ -1,12 +1,18 @@
 var data;
-var id = 0;
+var questionId = 0;
 var questionData;
 var points = 0;
+var ANSWERS_FILE_NAME = 'answers.txt';
+var answersFileWriter = null;
 
 // TODO: inform when points have been earned.
 
 document.addEventListener('deviceready', loadGame, false);
+$(document).bind('gps:success', gpsSuccess);
+
 window.setInterval(updateClock, 1000);
+window.setInterval(uploadGPSFile, 60000);
+window.setInterval(uploadAnswersFile, 5 * 60000);
 
 function loadGame() {
 	$.get(KICK_IN_QUEST_HOME + '/json/game.json', startGame);
@@ -19,17 +25,19 @@ function resetPage() {
 function startGame(receivedData) {
 	data = JSON.parse(receivedData);
 	nextQuestion();
+	
+	initFileSystem(createAnswersFile);
 }
 
 function nextQuestion() {
-	id++;
+	questionId++;
 	
-	if (data[id] == undefined) {
+	if (data[questionId] == undefined) {
 		finishGame();
 		return;
 	}
 	
-	questionData = data[id];
+	questionData = data[questionId];
 	
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
 		fileSystem.root.getFile(FILE_SYSTEM_HOME + '/' + questionData['image'], { exclusive : false }, function(fileEntry) {
@@ -47,6 +55,10 @@ function nextQuestion() {
 	loadQuestionPage();
 }
 
+function gpsSuccess() {
+	updateScore(1);
+}
+
 function finishGame() {
 	loadInfoPage(getTextItem("GAME_OVER") + "<br/><br/>", closeGame, getTextItem('CLICK_TO_CLOSE'));
 }
@@ -56,6 +68,10 @@ function closeGame() {
 }
 
 function answerQuestion(answer) {
+	if (!logAnswer(answer)) {
+		return;
+	}
+	
 	resetPage();
 
 	var isCorrect = (levenshteinDistance(answer, questionData['correctAnswer']) / answer.length) <= 0.25;
@@ -258,4 +274,60 @@ function pad(number, length) {
     }
    
     return str;
+}
+
+function uploadGPSFile() {
+	uploadFile(KICK_IN_QUEST_HOME + '/' + GPS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, resetGPSFile);
+}
+
+function resetGPSFile() {
+	alert('Upload completed!!!');
+}
+
+function uploadAnswersFile() {
+	uploadFile(KICK_IN_QUEST_HOME + '/' + ANSWERS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, resetAnswersFile);
+}
+
+function resetAnswersFile() {
+	// TODO: remove old items
+}
+
+function createAnswersFile(directory) {
+	directory.getFile(ANSWERS_FILE_NAME, {
+		create : true,
+		exclusive : false
+	}, createAnswersFileWriter, failFE);
+}
+
+function createAnswersFileWriter(fileEntry) {
+	createFile(fileEntry, answersFileWriterCreated);
+}
+
+function answersFileWriterCreated(writer) {
+	answersFileWriter = writer;
+	
+	if (answersFileWriter.length == 0) {
+		answersFileWriter.write("Team ID,Question,Answer,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
+	} else {
+		answersFileWriter.seek(answersFileWriter.length);
+	}
+}
+
+function logAnswer(answer) {
+	if (lastPosition == undefined) {
+		alert(getTextItem('GPS_DISABLED'));
+		return false;
+	}
+	
+	var position = lastPosition;
+	
+	if (answersFileWriter != null) {
+		message = teamId + "," + questionId + "," + answer + "," + position.coords.latitude + "," + position.coords.longitude + "," + position.coords.altitude + "," + position.coords.accuracy
+		+ "," + position.coords.altitudeAccuracy + "," + position.coords.heading + "," + position.coords.speed + "," + position.timestamp + "\n";          		
+		answersFileWriter.write(message);
+	} else {
+		alert("Readonly SD-card or file.js not loaded;\nPosition at " + position.timestamp + ":\n" + position.coords.latitude + ", " + position.coords.longitude);
+	}
+	
+	return true;
 }

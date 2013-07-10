@@ -15,7 +15,8 @@
 		"DISTANCE_TO_EXPECTED POINT": "De afstand tot het verwachte punt bedraagt",
 		"NO_LOCATION_FOUND": "Er is geen locatie gevonden. Zorg ervoor dat de GPS sensor aanstaat.",
 		"GAME_OVER": "Dit was de laatste vraag, het spel is afgelopen. Hartelijk dank voor het meedoen!",
-		"CLICK_TO_CLOSE": "Klik hier om af te sluiten"
+		"CLICK_TO_CLOSE": "Klik hier om af te sluiten",
+		"GPS_DISABLED": "Het GPS signaal is uitgeschakeld of nog niet ontvangen. Zet dit aan om verder te gaan, of wacht tot dit signaal weer beschikbaar is."
 	},
     "1": {
         "type": "multipleChoice",

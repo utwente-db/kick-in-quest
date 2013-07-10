@@ -1,6 +1,4 @@
 // Store GPS data to SD-Card
-
-var fileWriter = null;
 var zipFile = null;
 var applicationDirectory = null;
 var fileSystem = null;
@@ -10,8 +8,7 @@ var callBack = null;
 
 function initFileSystem(callBackFunction) {
 	if (fileSystem != undefined) {
-		callBackFunction();
-		return;
+		return openFileSystem(fileSystem, callBackFunction);
 	}
 	
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function fileSystemInitialized(fileSystem) {
@@ -54,26 +51,32 @@ function onGetDirectoryFail(evt) {
 
 // Upload GPS data to Server using HTTP POST
 // TODO: test this on a real server!
-function uploadFile(sourceFileURI, serverURI) {
+function uploadFile(sourceFileURI, serverURI, params, callBackFunction) {
     var options = new FileUploadOptions();
-    options.fileKey="file";
-    options.fileName=sourceFileURI.substr(sourceFileURI.lastIndexOf('/') + 1); // only the filename
-    options.mimeType="text/plain";
-    var params = {};
+    
+    options.fileKey = "data";
+    options.fileName = sourceFileURI.substr(sourceFileURI.lastIndexOf('/') + 1); // only the filename
+    options.mimeType = "text/plain";
+
+    if (params == undefined) {
+    	params = {};
+    }
+    
     options.params = params;
+    
     var ft = new FileTransfer();
-    ft.upload(sourceFileURI, encodeURI(serverURI), onUploadOK, onUploadFail, options);	
+    ft.upload(sourceFileURI, encodeURI(serverURI), callBackFunction, onUploadFail, options);	
 }
 
 function onUploadOK(metadata) {
-	alert("Uploaded " + (Math.round(metadata.bytesSent / 102.4) / 10) + " MB");
+//	alert("Uploaded " + (Math.round(metadata.bytesSent / 102.4) / 10) + " MB");
 	console.log("Code = " + metadata.responseCode);
 	console.log("Response = " + metadata.response);
 	console.log("Sent = " + metadata.bytesSent);
 }
 
 function onUploadFail(error) {
-	alert("An error has occurred: Code = " + error.code);
+//	alert("An error has occurred: Code = " + error.code);
 	console.log("upload error source " + error.source);
 	console.log("upload error target " + error.target);
 }
@@ -110,10 +113,11 @@ function gotFileEntry(fileEntry, downloadURI, destinationFileName) {
 	var fileTransfer = new FileTransfer();
 	
 	fileEntry.remove();
+	
 	fileTransfer.download(downloadURI,
-					sPath + destinationFileName,
-					downloadSuccess,
-					downloadError);
+		sPath + destinationFileName,
+		downloadSuccess,
+		downloadError);
 }
 
 function downloadSuccess(theFile)  {
@@ -122,7 +126,6 @@ function downloadSuccess(theFile)  {
 	else
 		alert("application directory was null");
 	console.log("download complete: " + theFile.toURI());
-//	showLink(theFile.toURI());
 }
 
 function openFileSystemRead(fileSystem) {
@@ -208,16 +211,6 @@ function downloadError(error) {
 	console.log("upload error code: " + error.code);
 }
 
-function showLink(url) {
-	alert(url);
-	var divEl = document.getElementById("ready");
-	var aElem = document.createElement("a");
-	aElem.setAttribute("target", "_blank");
-	aElem.setAttribute("href", url);
-	aElem.appendChild(document.createTextNode("Ready! Click To Open."))
-	divEl.appendChild(aElem);
-}
-
 function fail(evt) {
 	console.log(evt.target.error.code);
 }
@@ -225,3 +218,9 @@ function fail(evt) {
 /*
  * END OF DOWNLOAD FILE
  */
+
+function fileExists(path, fileExistsCallback, fileDoesNotExistCallback) {
+	initFileSystem(function() {
+        fileSystem.root.getFile(path, { create: false }, fileExistsCallback, fileDoesNotExistCallback);
+    });
+}

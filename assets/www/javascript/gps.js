@@ -5,7 +5,7 @@
 // variables
 var gpsTimeoutVal = 60000;
 var lastPosition;
-var gpsFileName = "gpsdata.txt";
+var GPS_FILE_NAME = "gpsdata.txt";
 var watchID = null;
 var gpsOn = false;
 var gpsFileWriter = null;
@@ -33,11 +33,13 @@ function endGPSTracking() {
 function onGPSSuccess(position) {
 	gpsOn = true;
 	lastPosition = position;
+	
 	// TODO: (optional) enable the buttons, allow answering the question
-	if (fileWriter != null) {
+	if (gpsFileWriter != null) {
 		message = "" + position.coords.latitude + "," + position.coords.longitude + "," + position.coords.altitude + "," + position.coords.accuracy
 		+ "," + position.coords.altitudeAccuracy + "," + position.coords.heading + "," + position.coords.speed + "," + position.timestamp + "\n";          		
-		fileWriter.write(message);
+		gpsFileWriter.write(message);
+		$(document).trigger('gps:success');
 	} else {
 		alert("Readonly SD-card or file.js not loaded;\nPosition at " + position.timestamp + ":\n" + position.coords.latitude + ", " + position.coords.longitude);
 	}
@@ -111,20 +113,22 @@ function getEllipsoidalDistance(lat1, lon1, lat2, lon2) {
 }
 
 function createGPSFile(directory) {
-	directory.getFile(gpsFileName, {
+	directory.getFile(GPS_FILE_NAME, {
 		create : true,
 		exclusive : false
 	}, createGPSFileWriter, failFE);
 }
 
-function createGPSFileWriter(writer) {
-	/*
-	 * writer.onwriteend = function(evt) { alert("success writing file"); };
-	 */
+function createGPSFileWriter(fileEntry) {
+	createFile(fileEntry, gpsFileWriterCreated);
+}
+
+function gpsFileWriterCreated(writer) {
 	gpsFileWriter = writer;
 	
-	if (fileWriter.length == 0)
-		fileWriter.write("Latitude,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
-	else
-		fileWriter.seek(fileWriter.length);
+	if (gpsFileWriter.length == 0) {
+		gpsFileWriter.write("Latitude,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
+	} else {
+		gpsFileWriter.seek(gpsFileWriter.length);
+	}
 }
