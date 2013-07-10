@@ -34,7 +34,7 @@ function nextInfoItem() {
 }
 
 function downloadPackage(callBackFunction) {
-	fileExists(KICK_IN_QUEST_HOME + '/json/info.json', 
+	fileExists(FILE_SYSTEM_HOME + '/json/info.json', 
 		function() {
 			initInfoScreen(); 
 		},
