@@ -105,17 +105,9 @@ function onGetAppDirectory(directory) {
 }
 
 function onFileSystemSuccess(fileSystem, downloadURI, destinationFileName) {
-	fileSystem.root.getFile("dummy.html", { create : true, exclusive : false }, function(fileEntry) { gotFileEntry(fileEntry, downloadURI, destinationFileName); }, fail);
-}
-
-function gotFileEntry(fileEntry, downloadURI, destinationFileName) {
-	var sPath = fileEntry.fullPath.replace("dummy.html", "");
 	var fileTransfer = new FileTransfer();
-	
-	fileEntry.remove();
-	
 	fileTransfer.download(downloadURI,
-		sPath + destinationFileName,
+		fileSystem.root.fullPath + '/' + destinationFileName,
 		downloadSuccess,
 		downloadError);
 }
