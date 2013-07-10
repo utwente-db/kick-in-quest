@@ -31,7 +31,19 @@ function nextQuestion() {
 	
 	questionData = data[id];
 	
-	$('#backgroundImage').css('background-image', 'url(\'' + KICK_IN_QUEST_HOME + '/' + questionData['image'] + '\')');
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function(fileSystem) {
+		fileSystem.root.getFile(FILE_SYSTEM_HOME + '/' + questionData['image'], { exclusive : false }, function(fileEntry) {
+			fileEntry.file(function(file) {
+				 var reader = new FileReader();
+				 reader.onload = function(evt) {
+					 $('#backgroundImage').css('background-image', 'url(' + evt.target.result + ')');
+				 };
+				 reader.readAsText(file);	
+			}, null);
+		}, null);
+	}, null);	
+	
+	// $('#backgroundImage').css('background-image', 'url(\'' + KICK_IN_QUEST_HOME + '/' + questionData['image'] + '\')'); // can't get this to work; unable to unzip and store binary objects on the sd-card
 	loadQuestionPage();
 }
 

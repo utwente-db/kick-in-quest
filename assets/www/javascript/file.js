@@ -194,7 +194,12 @@ function storeUnzippedFileWriter(writer) {
 		}
 	}
 	var fileName = writer.fileName.substring(writer.fileName.indexOf(FILE_SYSTEM_HOME) + FILE_SYSTEM_HOME.length + 1);
-	writer.write(zipFile.files[fileName].data);
+	var data = zipFile.files[fileName].data;
+	if (fileName.indexOf('.jpg') > 0 || fileName.indexOf('.jpeg') > 0) // binary, jpeg
+		data = "data:image/jpeg;base64," + JSZipBase64.encode(data);
+	else if (fileName.indexOf('.png') > 0) // binary, png
+		data = "data:image/png;base64," + JSZipBase64.encode(data);
+	writer.write(data);
 }
 
 function downloadError(error) {
