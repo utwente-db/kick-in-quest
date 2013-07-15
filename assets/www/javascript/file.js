@@ -166,6 +166,10 @@ function storeUnzippedFileWriter(writer) {
 		++extractedFiles;
 		if (extractedFiles >= filesInZip) {
 			callBack();
+			// Now delete the ZIP file (this is only here to save the SD-card's space, so there is more available for the coordinates).
+			applicationDirectory.getFile(LOCAL_PACKAGE_FILE_NAME, {
+				exclusive : false
+			}, function(fileEntry) { fileEntry.remove(null, fail); }, fail);
 		}
 	}
 	var fileName = writer.fileName.substring(writer.fileName.indexOf(FILE_SYSTEM_HOME) + FILE_SYSTEM_HOME.length + 1);
