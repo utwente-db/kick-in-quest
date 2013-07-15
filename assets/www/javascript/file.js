@@ -26,7 +26,7 @@ function openFileSystem(fileSystemParam, callBackFunction) {
 }
 
 function createFile(fileEntry, callbackFunction) {
-	fileEntry.createWriter(callbackFunction, failW);
+	fileEntry.createWriter(callbackFunction, fail);
 }
 
 function failFS(evt) {
@@ -35,14 +35,6 @@ function failFS(evt) {
 	// alert(evt.message);
 	// alert(evt.target.error.code);
 	// console.log(evt.target.error.code);
-}
-
-function failFE(evt) {
-	alert("Opening file for writing failed with error " + evt.code);
-}
-
-function failW(evt) {
-	alert("Creating FileWriter failed with error " + evt.code);
 }
 
 function onGetDirectoryFail(evt) {
@@ -87,47 +79,35 @@ function onUploadFail(error) {
  */
 function downloadFile(downloadURI, destinationFileName, callBackFunction) {
 	callBack = callBackFunction;
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, openAppFileSystem, failFS); // initialize the applicationDirectory for unzipping
 	window.requestFileSystem(
 					LocalFileSystem.PERSISTENT,
 					0, function(fileSystem) { onFileSystemSuccess(fileSystem, downloadURI, destinationFileName); }, fail);
 }
 
-function openAppFileSystem(fileSystem) {
+function onFileSystemSuccess(fileSystem, downloadURI, destinationFileName) {
 	fileSystem.root.getDirectory(FILE_SYSTEM_HOME, {
 		create : true,
 		exclusive : false
-	}, onGetAppDirectory, onGetDirectoryFail);
+	}, function(directory) {onGetAppDirectory(directory, downloadURI, destinationFileName); }, fail);
 }
 
-function onGetAppDirectory(directory) {
-	applicationDirectory = directory;
-}
-
-function onFileSystemSuccess(fileSystem, downloadURI, destinationFileName) {
-	var fileTransfer = new FileTransfer();
-	fileTransfer.download(downloadURI,
-		fileSystem.root.fullPath + '/' + destinationFileName,
-		downloadSuccess,
-		downloadError);
+function onGetAppDirectory(directory, downloadURI, destinationFileName) {
+	applicationDirectory = directory; // remember the applicationDirectory for unzipping later on
+	if (applicationDirectory != null) {
+		var fileTransfer = new FileTransfer();
+		fileTransfer.download(downloadURI,
+			applicationDirectory.fullPath + '/' + destinationFileName,
+			downloadSuccess,
+			downloadError);
+	} else
+		alert("failed to create folder for application data on local storage.")
 }
 
 function downloadSuccess(theFile)  {
-	if (applicationDirectory != null)
-		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, openFileSystemRead, failFS);
-	else
-		alert("application directory was null");
-	console.log("download complete: " + theFile.toURI());
-}
-
-function openFileSystemRead(fileSystem) {
-	fileSystem.root.getFile(LOCAL_PACKAGE_FILE_NAME, {
+	applicationDirectory.getFile(LOCAL_PACKAGE_FILE_NAME, {
 		exclusive : false
-	}, readFileEntry, failFE);
-}
-
-function readFileEntry(fileEntry) {
-	fileEntry.file(readFile, fail);
+	}, function(fileEntry) { fileEntry.file(readFile, fail); }, fail);
+	console.log("download complete: " + theFile.toURI());
 }
 
 function readFile(file) {
@@ -158,7 +138,7 @@ function createZipFolders() {
      for (filename in zipFile.files) {
          var options = zipFile.files[filename].options || {};
     	 if (options.dir)
-    		 applicationDirectory.getDirectory(filename, {create : true, exclusive : false}, onCreateDirectory, failFE);
+    		 applicationDirectory.getDirectory(filename, {create : true, exclusive : false}, onCreateDirectory, fail);
      }
 }
 
@@ -173,12 +153,12 @@ function writeZipFiles() {
     for (filename in zipFile.files) {
         var options = zipFile.files[filename].options || {};
         if (!options.dir)
-        	applicationDirectory.getFile(filename, {create : true, exclusive : false}, storeUnzippedFile, failFE);
+        	applicationDirectory.getFile(filename, {create : true, exclusive : false}, storeUnzippedFile, fail);
     }
 }
 
 function storeUnzippedFile(fileEntry) {
-	fileEntry.createWriter(storeUnzippedFileWriter, failW);
+	fileEntry.createWriter(storeUnzippedFileWriter, fail);
 }
 
 function storeUnzippedFileWriter(writer) {
