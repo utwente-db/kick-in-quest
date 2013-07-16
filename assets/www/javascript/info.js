@@ -10,8 +10,12 @@ var data;
 document.addEventListener('deviceready', loadInfo, false);
 
 function loadInfo() {
-	$(document).bind('appDirectory:loaded', downloadPackage);
+	$(document).bind('appDirectory:loaded', checkForAnswersFile);
 	initFileSystem();
+}
+
+function checkForAnswersFile() {
+	fileExists(FILE_SYSTEM_HOME + '/answers.txt', goToGame, downloadPackage);
 }
 
 function initInfoScreen() {
@@ -27,7 +31,7 @@ function nextInfoItem() {
 	id++;
 	
 	if (typeof data[id] == 'undefined') {
-		document.location = 'game.html?language=' + language + '&teamId=' + teamId;
+		goToGame();
 		return;
 	}
 	
@@ -49,4 +53,8 @@ function readZIPFile(event, callBackFunction) {
 	zipFile = new JSZip(data, {base64: true});
 	 
 	createZipFolders(callBackFunction);
+}
+
+function goToGame() {
+	document.location = 'game.html?language=' + language + '&teamId=' + teamId;
 }

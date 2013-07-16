@@ -27,7 +27,6 @@ function readZipFileSuccess(data) {
 	$(unzipper.entries).each(function(entry) {
 		console.log('each');
 		console.log(d.fileName);
-		// TODO write these to SD card
 	});
 }
 

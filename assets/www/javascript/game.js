@@ -9,8 +9,6 @@ var knownLatitude = '??.??????';
 var knownLongitude = '?.??????';
 var knownPassword = '........ .....';
 
-// TODO: inform when points have been earned.
-
 document.addEventListener('deviceready', loadGame, false);
 $(document).bind('gps:success', gpsSuccess);
 
@@ -173,7 +171,7 @@ function checkLocation(clickEvent, position, displayAndLogResults) {
 		logAnswer('', position);
 	}
 
-	updateScore(1000, position);
+	var distance = updateScore(1000, position);
 	
 	if (displayAndLogResults) {
 		$('.checkLocation').css('display', 'block');
@@ -309,6 +307,8 @@ function setDigit(id, value) {
 }
 
 function updateScore(pointNorm, position) {
+	var distance = 0;
+
 	if (position == undefined) {
 		points += pointNorm;
 	} else {
@@ -318,12 +318,14 @@ function updateScore(pointNorm, position) {
 		var latExpected = questionData['latitude'];
 		var lonExpected = questionData['longitude'];
 
-		var distance = getDistance(lat, lon, latExpected, lonExpected);
+		distance = getDistance(lat, lon, latExpected, lonExpected);
 		
 		points += Math.round(pointNorm / distance);
 	}
 	
 	updateScoreBoard();
+	
+	return distance;
 }
 
 function updateScoreBoard() {
@@ -436,7 +438,7 @@ function readPriorAnswersFromFile(answersText, callBackFunction) {
 		position.coords.longitude = answerComponents[4];
 
 		var answer = answerComponents[2];
-		
+
 		if (answer == undefined || answer == '') {
 			checkLocation(null, position, false);
 		} else {

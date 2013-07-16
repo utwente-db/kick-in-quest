@@ -40,9 +40,7 @@ function onGPSSuccess(position) {
  * onGPSError Callback receives a PositionError object
  */
 function onGPSError(error) {
-	// TODO: write error to log file as well
-	// TODO: remove this alert, for debugging purposes only
-	// alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
+	// TODO: write error to log file
 	gpsOn = false;
 }
 
