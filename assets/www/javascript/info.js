@@ -10,7 +10,8 @@ var data;
 document.addEventListener('deviceready', loadInfo, false);
 
 function loadInfo() {
-	downloadPackage(initInfoScreen); 
+	$(document).bind('appDirectory:loaded', downloadPackage);
+	initFileSystem();
 }
 
 function initInfoScreen() {
@@ -33,12 +34,19 @@ function nextInfoItem() {
 	loadInfoPage(data[id]['infoText'], nextInfoItem, data[id]['buttonText']);
 }
 
-function downloadPackage(callBackFunction) {
+function downloadPackage() {
 	fileExists(FILE_SYSTEM_HOME + '/json/info.json', 
 		function() {
 			initInfoScreen(); 
 		},
 		function() {
-			downloadFile(GET_QUESTIONS_URL, LOCAL_PACKAGE_FILE_NAME, callBackFunction);
+			downloadFile(GET_QUESTIONS_URL, LOCAL_PACKAGE_FILE_NAME, function(event) { readZIPFile(event, initInfoScreen); });
 		});
+}
+
+function readZIPFile(event, callBackFunction) {
+	var data = event.target.result.substring(28); // strip the string "data:application/zip;base64," from the data
+	zipFile = new JSZip(data, {base64: true});
+	 
+	createZipFolders(callBackFunction);
 }

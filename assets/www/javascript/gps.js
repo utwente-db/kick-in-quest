@@ -10,15 +10,6 @@ var watchID = null;
 var gpsOn = false;
 var gpsFileWriter = null;
 
-// Kick In Quest code
-document.addEventListener("deviceready", onDeviceReady, false);
-
-function onDeviceReady() {
-	startGPSTracking();
-	
-	initFileSystem(createGPSFile);
-}
-
 function startGPSTracking() {
     watchID = navigator.geolocation.watchPosition(onGPSSuccess, onGPSError, {enableHighAccuracy: true, timeout: gpsTimeoutVal, maximumAge: 0 });
 }
@@ -34,14 +25,14 @@ function onGPSSuccess(position) {
 	gpsOn = true;
 	lastPosition = position;
 	
-	// TODO: (optional) enable the buttons, allow answering the question
 	if (gpsFileWriter != null) {
 		message = "" + position.coords.latitude + "," + position.coords.longitude + "," + position.coords.altitude + "," + position.coords.accuracy
-		+ "," + position.coords.altitudeAccuracy + "," + position.coords.heading + "," + position.coords.speed + "," + position.timestamp + "\n";          		
+					 + "," + position.coords.altitudeAccuracy + "," + position.coords.heading + "," + position.coords.speed + "," + position.timestamp + "\n";          		
+
 		gpsFileWriter.write(message);
 		$(document).trigger('gps:success');
 	} else {
-		alert("Readonly SD-card or file.js not loaded;\nPosition at " + position.timestamp + ":\n" + position.coords.latitude + ", " + position.coords.longitude);
+		alert("Readonly SD-card or file system not initialized;\nPosition at " + position.timestamp + ":\n" + position.coords.latitude + ", " + position.coords.longitude);
 	}
 }
 
@@ -53,7 +44,6 @@ function onGPSError(error) {
 	// TODO: remove this alert, for debugging purposes only
 	// alert('code: '    + error.code    + '\n' + 'message: ' + error.message + '\n');
 	gpsOn = false;
-	// TODO: (optional) disable the buttons, make the page wait till the GPS signal is back 
 }
 
 function isGpsOn() {
@@ -112,15 +102,15 @@ function getEllipsoidalDistance(lat1, lon1, lat2, lon2) {
 	return d;
 }
 
-function createGPSFile(directory) {
-	directory.getFile(GPS_FILE_NAME, {
+function createGPSFile() {
+	applicationDirectory.getFile(GPS_FILE_NAME, {
 		create : true,
 		exclusive : false
-	}, createGPSFileWriter, failFE);
+	}, createGPSFileWriter, fail);
 }
 
 function createGPSFileWriter(fileEntry) {
-	createFile(fileEntry, gpsFileWriterCreated);
+	createFileWriter(fileEntry, gpsFileWriterCreated);
 }
 
 function gpsFileWriterCreated(writer) {
