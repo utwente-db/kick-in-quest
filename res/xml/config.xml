@@ -20,10 +20,10 @@
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         id        = "io.cordova.helloCordova"
         version   = "2.0.0">
-    <name>Kick In Quest</name>
+    <name>Kick-In Quest</name>
 
     <description>
-         The Kick In Quest is a treasure hunt through Enschede as a part of this year's Kick In. 
+         The Kick-In Quest is a treasure hunt through Enschede as a part of this year's Kick-In. 
     </description>
 
     <author href="http://www.facebook.com/vdegraaff" email="v.degraaff@utwente.nl">
