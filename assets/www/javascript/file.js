@@ -118,7 +118,7 @@ function openFileSystemRead(pathToFile, callBackFunction, asText) {
 		asText = false;
 	}
 	
-	fileSystem.root.getFile(pathToFile, {
+	applicationDirectory.getFile(pathToFile, {
 		exclusive : false
 	}, function(fileEntry) { readFileEntry(fileEntry, callBackFunction, asText); }, fail);
 }
