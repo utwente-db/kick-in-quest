@@ -51,7 +51,6 @@
 
 	<feature name="http://api.phonegap.com/1.0/file"/>
 	<feature name="http://api.phonegap.com/1.0/geolocation"/>
-<!-- 	<feature name="http://api.phonegap.com/1.0/media"/> -->
 	
 <!--     <feature name="App"> -->
 <!--       <param name="android-package" value="org.apache.cordova.App"/> -->
