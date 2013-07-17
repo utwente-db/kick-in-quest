@@ -42,7 +42,7 @@ function readZIPFile(event, callBackFunction) {
 
 function initInfoScreen() {
 	alert('iis');
-	$.get(KICK_IN_QUEST_HOME + '/json/info.json', startInfoScreen);
+	$.get(applicationDirectory.fullPath + '/json/info.json', startInfoScreen);
 }
 
 function startInfoScreen(receivedData) {

@@ -27,7 +27,7 @@ function loadGame() {
 }
 
 function loadGameFromJSON() {
-	$.get(KICK_IN_QUEST_HOME + '/json/game.json', startGame);
+	$.get(applicationDirectory.fullPath + '/json/game.json', startGame);
 }
 
 function resetPage() {
@@ -61,7 +61,7 @@ function nextQuestion() {
 		}, null);
 	}, null);
 	
-	// $('#backgroundImage').css('background-image', 'url(\'' + KICK_IN_QUEST_HOME + '/' + questionData['image'] + '\')'); // can't get this to work; unable to unzip and store binary objects on the sd-card
+	// $('#backgroundImage').css('background-image', 'url(\'' + applicationDirectory.fullPath + '/' + questionData['image'] + '\')'); // can't get this to work; unable to unzip and store binary objects on the sd-card
 	loadQuestionPage();
 }
 
@@ -358,7 +358,7 @@ function pad(number, length) {
 }
 
 function uploadGPSFile() {
-	uploadFile(KICK_IN_QUEST_HOME + '/' + GPS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, resetGPSFile);
+	uploadFile(applicationDirectory.fullPath + '/' + GPS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, resetGPSFile);
 }
 
 function resetGPSFile() {
@@ -366,7 +366,7 @@ function resetGPSFile() {
 }
 
 function uploadAnswersFile(callBackFunction) {
-	uploadFile(KICK_IN_QUEST_HOME + '/' + ANSWERS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, callBackFunction);
+	uploadFile(applicationDirectory.fullPath + '/' + ANSWERS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, callBackFunction);
 }
 
 function createAnswersFile() {
@@ -415,7 +415,7 @@ function skipToCurrentAnswer() {
 }
 
 function readPriorAnswers(callBackFunction) {
-	$.get(KICK_IN_QUEST_HOME + '/answers.txt', function(answers) { readPriorAnswersFromFile(answers, callBackFunction); });
+	$.get(applicationDirectory.fullPath + '/answers.txt', function(answers) { readPriorAnswersFromFile(answers, callBackFunction); });
 }
 	
 /*
@@ -466,7 +466,7 @@ function startGPSPoints() {
 }
 
 function readPriorGPSPoints(callBackFunction) {
-	$.get(KICK_IN_QUEST_HOME + '/gpsdata.txt', function(gpsdata) { readPriorGPSPointsFromFile(gpsdata, callBackFunction); });
+	$.get(applicationDirectory.fullPath + '/gpsdata.txt', function(gpsdata) { readPriorGPSPointsFromFile(gpsdata, callBackFunction); });
 }
 	
 /*

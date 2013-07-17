@@ -3,10 +3,7 @@ var language = getGETParam('language');
 var deviceId = createUUID();
 
 var PLATFORM = getPlatformName();
-alert(navigator.userAgent);
-
 var FILE_SYSTEM_HOME = 'KickInQuest' + teamId;
-var KICK_IN_QUEST_HOME = getHomeFolder();
 
 var SERVER_NUMBER = getGETParam('teamId').substring(3);
 var KICK_IN_QUEST_SERVER_URL = 'http://farm' + SERVER_NUMBER + '.ewi.utwente.nl:8080/kick-in-quest-server';
@@ -21,16 +18,8 @@ function getPlatformName() {
 	if (navigator.userAgent.match(/Android/i)) {
 		return 'android';
 	} else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-		//TODO: overwrite KICK_IN_QUEST_HOME here
+		//TODO: overwrite applicationDirectory.fullPath here
 		return 'ios';
-	}
-}
-
-function getHomeFolder() {
-	if (PLATFORM == 'android') {
-		return 'file:///mnt/sdcard/' + FILE_SYSTEM_HOME;
-	} else if (PLATFORM == 'ios') {
-		return FILE_SYSTEM_HOME;
 	}
 }
 
