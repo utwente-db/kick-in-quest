@@ -7,16 +7,18 @@ var answersFileWriter = null;
 
 var knownLatitude = '??.??????';
 var knownLongitude = '?.??????';
-var knownPassword = '........ .....';
+var knownPassword = '???????? ?????';
 
-document.addEventListener('deviceready', loadGame, false);
 $(document).bind('gps:success', gpsSuccess);
 
 window.setInterval(updateClock, 1000);
 window.setInterval(uploadGPSFile, 60000);
 window.setInterval(uploadAnswersFile, 5 * 60000);
 
+document.addEventListener('deviceready', loadGame, false);
+
 function loadGame() {
+	alert('lg');
 	$(document).bind('appDirectory:loaded', loadGameFromJSON);
 	$(document).bind('appDirectory:loaded', createGPSFile);
 

@@ -8,6 +8,7 @@ var id = 0;
 var data;
 
 document.addEventListener('deviceready', loadInfo, false);
+$.getScript('javascript/lib/cordova-' + getPlatformName() + '.js');
 
 function loadInfo() {
 	$(document).bind('appDirectory:loaded', checkForAnswersFile);
@@ -56,5 +57,5 @@ function readZIPFile(event, callBackFunction) {
 }
 
 function goToGame() {
-	document.location = 'game.html?language=' + language + '&teamId=' + teamId;
+	document.location = 'game-' + PLATFORM + '.html?language=' + language + '&teamId=' + teamId;
 }
