@@ -183,6 +183,7 @@ function writeZipFiles(callBackFunction) {
 }
 
 function storeUnzippedFile(fileEntry, callBackFunction) {
+	alert('suff ' + fileEntry.fullPath);
 	fileEntry.createWriter(function(writer) { storeUnzippedFileWriter(writer, callBackFunction); }, fail);
 }
 
@@ -203,7 +204,9 @@ function storeUnzippedFileWriter(writer, callBackFunction) {
 		data = "data:image/jpeg;base64," + JSZipBase64.encode(data);
 	else if (fileName.indexOf('.png') > 0) // binary, png
 		data = "data:image/png;base64," + JSZipBase64.encode(data);
+    alert('writing ' + fileName);
 	writer.write(data);
+	alert('done');
 }
 
 function downloadError(error) {
