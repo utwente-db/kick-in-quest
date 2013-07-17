@@ -168,6 +168,7 @@ function writeZipFiles(callBackFunction) {
         if (!options.dir)
         	++filesInZip;
     }
+    alert('fiz: ' + filesInZip);
     extractedFiles = 0;
     for (filename in zipFile.files) {
         var options = zipFile.files[filename].options || {};
@@ -191,7 +192,9 @@ function storeUnzippedFile(fileEntry, callBackFunction) {
 function storeUnzippedFileWriter(writer, callBackFunction) {
 	writer.onwriteend = function(evt) {
 		++extractedFiles;
+		alert('extracted so far: ' + extractedFiles);
 		if (extractedFiles >= filesInZip) {
+			alert('will call back now');
 			callBackFunction();
 			// Now delete the ZIP file (this is only here to save the SD-card's space, so there is more available for the coordinates).
 			applicationDirectory.getFile(LOCAL_PACKAGE_FILE_NAME, {
@@ -201,11 +204,11 @@ function storeUnzippedFileWriter(writer, callBackFunction) {
 	}
 	var fileName = writer.fileName.substring(writer.fileName.indexOf(FILE_SYSTEM_HOME) + FILE_SYSTEM_HOME.length + 1);
 	var data = zipFile.files[fileName].data;
+    alert('writing ' + fileName);
 	if (fileName.indexOf('.jpg') > 0 || fileName.indexOf('.jpeg') > 0) // binary, jpeg
 		data = "data:image/jpeg;base64," + JSZipBase64.encode(data);
 	else if (fileName.indexOf('.png') > 0) // binary, png
 		data = "data:image/png;base64," + JSZipBase64.encode(data);
-    alert('writing ' + fileName);
 	writer.write(data);
 	alert('done');
 }
