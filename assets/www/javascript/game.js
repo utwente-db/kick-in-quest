@@ -36,11 +36,12 @@ function startGame(receivedData) {
 	data = JSON.parse(receivedData);
 	
 	skipToCurrentAnswer();
+	startGPSPoints();
 }
 
 function nextQuestion() {
 	questionId++;
-	
+
 	if (data[questionId] == undefined) {
 		finishGame();
 		return;
@@ -69,11 +70,15 @@ function gpsSuccess() {
 }
 
 function finishGame() {
+	resetPage();
+	
+	$('.answerCheck').css('display', 'block');
+
 	loadInfoPage(getTextItem("GAME_OVER") + "<br/><br/>", closeGame, getTextItem('CLICK_TO_CLOSE'));
 }
 
 function closeGame() {
-    navigator.app.exitApp();
+	uploadAnswersFile(function() { navigator.app.exitApp(); });
 }
 
 function answerQuestion(answer, position, displayAndLogResults) {
@@ -143,7 +148,7 @@ function updateKnownInformation(answerCorrect) {
 		var newCharacter = answerCorrect ? reward['letter'] : '%';
 		var positions = reward['position'].split(',');
 		
-		for (i = 0; i < positions.length; i++) {
+		for (var i = 0; i < positions.length; i++) {
 			var pos = parseInt(positions[i]);
 			
 			knownPassword = knownPassword.substring(0, pos) + newCharacter + knownPassword.substring(pos + 1);
@@ -360,8 +365,8 @@ function resetGPSFile() {
 	alert('Upload completed!!!');
 }
 
-function uploadAnswersFile() {
-	uploadFile(KICK_IN_QUEST_HOME + '/' + ANSWERS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, null);
+function uploadAnswersFile(callBackFunction) {
+	uploadFile(KICK_IN_QUEST_HOME + '/' + ANSWERS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, callBackFunction);
 }
 
 function createAnswersFile() {
@@ -420,7 +425,7 @@ function readPriorAnswersFromFile(answersText, callBackFunction) {
 	var answers = answersText.split('\n');
 	
 	// Start at 1: pos 0 will contain the headers
-	for (i = 1; i < answers.length; i++) {
+	for (var i = 1; i < answers.length; i++) {
 		if (answers[i] == '') {
 			// Empty line, e.g. the end of the file
 			continue;
@@ -448,4 +453,32 @@ function readPriorAnswersFromFile(answersText, callBackFunction) {
 	
 	nextQuestion();
 	callBackFunction();
+}
+
+function startGPSPoints() {
+	fileExists(FILE_SYSTEM_HOME + '/' + GPS_FILE_NAME, 
+			function() {
+				readPriorGPSPoints(createGPSFile); 
+			}, 
+			function() {
+				createGPSFile();
+			});
+}
+
+function readPriorGPSPoints(callBackFunction) {
+	$.get(KICK_IN_QUEST_HOME + '/gpsdata.txt', function(gpsdata) { readPriorGPSPointsFromFile(gpsdata, callBackFunction); });
+}
+	
+/*
+ * Fast forward through the answer checking process
+ */
+function readPriorGPSPointsFromFile(gpsdata, callBackFunction) {
+	var items = gpsdata.split('\n');
+	var numberOfPoints = items.length - 1;
+
+	if (items[items.length - 1] == '') {
+		numberOfPoints--;
+	}
+
+	updateScore(numberOfPoints, null);
 }
