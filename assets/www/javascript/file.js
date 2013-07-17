@@ -153,6 +153,8 @@ function createZipFolders(callBackFunction) {
     		 writeZipFiles(callBackFunction);
     	 }
      }
+     
+     alert(applicationDirectory.fullPath);
      for (filename in zipFile.files) {
          var options = zipFile.files[filename].options || {};
     	 if (options.dir)
