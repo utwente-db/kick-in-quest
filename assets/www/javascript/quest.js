@@ -3,7 +3,7 @@ var language = getGETParam('language');
 var deviceId = createUUID();
 
 var PLATFORM = getPlatformName();
-alert(PLATFORM);
+alert(navigator.userAgent);
 
 var FILE_SYSTEM_HOME = 'KickInQuest' + teamId;
 var KICK_IN_QUEST_HOME = getHomeFolder();
