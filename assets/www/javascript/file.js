@@ -184,6 +184,7 @@ function writeZipFiles(callBackFunction) {
 
 function storeUnzippedFile(fileEntry, callBackFunction) {
 	alert('suff ' + fileEntry.fullPath);
+	alert(fileEntry.toURL());
 	fileEntry.createWriter(function(writer) { storeUnzippedFileWriter(writer, callBackFunction); }, fail);
 }
 
