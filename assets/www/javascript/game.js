@@ -27,15 +27,15 @@ function loadGame() {
 }
 
 function loadGameFromJSON() {
-	$.get(applicationDirectory.fullPath + '/json/game.json', startGame);
+	openFileSystemRead('json/game.json', startGame, true);
 }
 
 function resetPage() {
 	$('.gameBox').css('display', 'none');
 }
 
-function startGame(receivedData) {
-	data = JSON.parse(receivedData);
+function startGame(event) {
+	data = JSON.parse(event.target.result);
 	
 	skipToCurrentAnswer();
 	startGPSPoints();
@@ -415,7 +415,7 @@ function skipToCurrentAnswer() {
 }
 
 function readPriorAnswers(callBackFunction) {
-	$.get(applicationDirectory.fullPath + '/answers.txt', function(answers) { readPriorAnswersFromFile(answers, callBackFunction); });
+	openFileSystemRead('answers.txt', function(event) { readPriorAnswersFromFile(event.target.result, callBackFunction); }, true);
 }
 	
 /*
@@ -466,7 +466,11 @@ function startGPSPoints() {
 }
 
 function readPriorGPSPoints(callBackFunction) {
-	$.get(applicationDirectory.fullPath + '/gpsdata.txt', function(gpsdata) { readPriorGPSPointsFromFile(gpsdata, callBackFunction); });
+	openFileSystemRead('gpsdata.txt', 
+					   function(event) { 
+						   readPriorGPSPointsFromFile(event.target.result, callBackFunction); 
+					   }, 
+					   true);
 }
 	
 /*

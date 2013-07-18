@@ -42,12 +42,12 @@ function readZIPFile(event, callBackFunction) {
 
 function initInfoScreen() {
 	alert('iis');
-	$.get(applicationDirectory.fullPath + '/json/info.json', startInfoScreen);
+	openFileSystemRead('json/info.json', startInfoScreen, true);
 }
 
-function startInfoScreen(receivedData) {
+function startInfoScreen(event) {
 	alert('sis');
-	data = JSON.parse(receivedData);
+	data = JSON.parse(event.target.result);
 	nextInfoItem();
 }
 
