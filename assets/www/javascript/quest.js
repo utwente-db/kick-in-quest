@@ -2,7 +2,6 @@ var teamId = getGETParam('teamId');
 var language = getGETParam('language');
 var deviceId = createUUID();
 
-var PLATFORM = getPlatformName();
 var FILE_SYSTEM_HOME = 'KickInQuest' + teamId;
 
 var SERVER_NUMBER = getGETParam('teamId').substring(3);
@@ -13,15 +12,6 @@ var ANSWER_QUESTIONS_URL = KICK_IN_QUEST_SERVER_URL + '/AnswerQuestions';
 
 var LOCAL_PACKAGE_FILE_NAME = 'quest-' + teamId + '.zip';
 var ANSWERS_FILE_NAME = "answers.txt";
-
-function getPlatformName() {
-	if (navigator.userAgent.match(/Android/i)) {
-		return 'android';
-	} else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-		//TODO: overwrite applicationDirectory.fullPath here
-		return 'ios';
-	}
-}
 
 function loadInfoPage(infoText, callBackFunction, buttonText) {
 	$('.infoText').html(infoText);
@@ -74,4 +64,13 @@ function createUUID() {
 
     var uuid = s.join("");
     return uuid;
+}
+
+function getPlatformName() {
+	if (navigator.userAgent.match(/Android/i)) {
+		return 'android';
+	} else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+		//TODO: overwrite applicationDirectory.fullPath here
+		return 'ios';
+	}
 }

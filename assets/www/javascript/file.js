@@ -228,5 +228,5 @@ function fail(evt) {
  */
 
 function fileExists(path, fileExistsCallback, fileDoesNotExistCallback) {
-    fileSystem.root.getFile(path, { create: false }, fileExistsCallback, fileDoesNotExistCallback);
+    applicationDirectory.getFile(path, { create: false }, fileExistsCallback, fileDoesNotExistCallback);
 }

@@ -51,7 +51,7 @@ function nextQuestion() {
 	
 	questionData = data[questionId];
 	
-	fileSystem.root.getFile(FILE_SYSTEM_HOME + '/' + questionData['image'], { exclusive : false }, function(fileEntry) {
+	applicationDirectory.getFile(questionData['image'], { exclusive : false }, function(fileEntry) {
 		fileEntry.file(function(file) {
 			 var reader = new FileReader();
 			 reader.onload = function(evt) {
@@ -404,7 +404,7 @@ function logAnswer(answer, position) {
 }
 
 function skipToCurrentAnswer() {
-	fileExists(FILE_SYSTEM_HOME + '/' + ANSWERS_FILE_NAME, 
+	fileExists(ANSWERS_FILE_NAME, 
 				function() {
 					readPriorAnswers(createAnswersFile); 
 				}, 
@@ -456,7 +456,7 @@ function readPriorAnswersFromFile(answersText, callBackFunction) {
 }
 
 function startGPSPoints() {
-	fileExists(FILE_SYSTEM_HOME + '/' + GPS_FILE_NAME, 
+	fileExists(GPS_FILE_NAME, 
 			function() {
 				readPriorGPSPoints(createGPSFile); 
 			}, 

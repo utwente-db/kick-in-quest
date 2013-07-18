@@ -8,7 +8,6 @@ var id = 0;
 var data;
 
 document.addEventListener('deviceready', loadInfo, false);
-$.getScript('javascript/lib/cordova-' + getPlatformName() + '.js');
 
 function loadInfo() {
 	alert('li 11:00');
@@ -18,12 +17,12 @@ function loadInfo() {
 
 function checkForAnswersFile() {
 	alert('cfaf');
-	fileExists(FILE_SYSTEM_HOME + '/answers.txt', goToGame, downloadPackage);
+	fileExists('answers.txt', goToGame, downloadPackage);
 }
 
 function downloadPackage() {
 	alert('dop');
-	fileExists(FILE_SYSTEM_HOME + '/json/info.json', 
+	fileExists('json/info.json', 
 		function() {
 			initInfoScreen(); 
 		},
@@ -63,5 +62,5 @@ function nextInfoItem() {
 }
 
 function goToGame() {
-	document.location = 'game-' + PLATFORM + '.html?language=' + language + '&teamId=' + teamId;
+	document.location = 'game-' + getPlatformName() + '.html?language=' + language + '&teamId=' + teamId;
 }
