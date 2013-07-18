@@ -11,7 +11,7 @@ document.addEventListener('deviceready', loadInfo, false);
 $.getScript('javascript/lib/cordova-' + getPlatformName() + '.js');
 
 function loadInfo() {
-	alert('li');
+	alert('li 11:00');
 	$(document).bind('appDirectory:loaded', checkForAnswersFile);
 	initFileSystem();
 }
