@@ -3,7 +3,10 @@ var questionId = 0;
 var questionData;
 var points = 0;
 var ANSWERS_FILE_NAME = 'answers.txt';
+var SCORE_FILE_NAME = 'score';
+
 var answersFileWriter = null;
+var scoreFileWriter = null;
 
 var knownLatitude = '??.??????';
 var knownLongitude = '?.??????';
@@ -18,9 +21,9 @@ window.setInterval(uploadAnswersFile, 5 * 60000);
 document.addEventListener('deviceready', loadGame, false);
 
 function loadGame() {
-	alert('lg');
 	$(document).bind('appDirectory:loaded', loadGameFromJSON);
 	$(document).bind('appDirectory:loaded', createGPSFile);
+	$(document).bind('appDirectory:loaded', readPoints);
 
 	initFileSystem();
 	startGPSTracking();
@@ -78,31 +81,26 @@ function finishGame() {
 }
 
 function closeGame() {
-	uploadAnswersFile(function() { navigator.app.exitApp(); });
+	uploadAnswersFile(closeApp);
 }
 
-function answerQuestion(answer, position, displayAndLogResults) {
-	if (position == undefined) {
-		if (typeof lastPosition === 'undefined') {
-			alert(getTextItem('NO_LOCATION_FOUND'));
-			return;
-		}
-		
-		position = lastPosition;
+function closeApp() {
+	navigator.app.exitApp();
+}
+
+function answerQuestion(answer) {
+	if (typeof lastPosition === 'undefined') {
+		alert(getTextItem('NO_LOCATION_FOUND'));
+		return;
 	}
 	
-	if (displayAndLogResults == undefined) {
-		displayAndLogResults = true;
-	}
+	position = lastPosition;
+	logAnswer(answer, position);
 	
-	if (displayAndLogResults) {
-		logAnswer(answer, position);
-		
-		resetPage();
-		$('.answerCheck').css('display', 'block');
-	}
+	resetPage();
+	$('.answerCheck').css('display', 'block');
 	
-	var isCorrect = (hex_md5(questionId + "*" + answer.toLowerCase()) == questionData['correctAnswer']);
+	isCorrect = checkAnswer(answer);
 	var message = '';
 	
 	if (isCorrect) {
@@ -127,9 +125,11 @@ function answerQuestion(answer, position, displayAndLogResults) {
 	message += 'E ' + knownLongitude.replace(/%/g, asWarning('X')) + '<br/><br/>';
 	message += knownPassword.replace(/%/g, asWarning('X')) + '<br/><br/>';
 	
-	if (displayAndLogResults) {
-		loadInfoPage(message, nextQuestion, getTextItem('NEXT'));
-	}
+	loadInfoPage(message, nextQuestion, getTextItem('NEXT'));
+}
+
+function checkAnswer(answer) {
+	return (hex_md5(questionId + "*" + answer.toLowerCase()) == questionData['correctAnswer']);
 }
 
 function updateKnownInformation(answerCorrect) {
@@ -156,44 +156,33 @@ function updateKnownInformation(answerCorrect) {
 	}
 }
 
-function checkLocation(clickEvent, position, displayAndLogResults) {
-	if (position == undefined) {
-		if (typeof lastPosition === 'undefined') {
-			alert(getTextItem('NO_LOCATION_FOUND'));
-			return;
-		}
+function checkLocation(clickEvent) {
+	if (typeof lastPosition === 'undefined') {
+		alert(getTextItem('NO_LOCATION_FOUND'));
+		return;
+	}
 		
-		position = lastPosition;
-	}
+	position = lastPosition;
 	
-	if (displayAndLogResults == undefined) {
-		displayAndLogResults = true;
-
-		resetPage();
-	}
-
-	if (displayAndLogResults) {
-		logAnswer('', position);
-	}
+	resetPage();
+	logAnswer('', position);
 
 	var distance = updateScore(1000, position);
 	
-	if (displayAndLogResults) {
-		$('.checkLocation').css('display', 'block');
-		
-		var message = getTextItem('LOCATION_WILL_BE_CHECKED') + ' ' + getTextItem('FOUND_COORDINATES') + ':<br/><br/>N '
-					  + position.coords.latitude.toFixed(6) + '<br/>E ' + position.coords.longitude.toFixed(6) + '<br/><br/>';
-		
-		var distanceText = getTextItem('DISTANCE_TO_EXPECTED POINT') + ':<br/>' + distance.toFixed(2) + 'm';
-		
-		if (distance > 25) {
-			distanceText = asWarning(distanceText);
-		}
-		
-		message += distanceText + '<br/><br/>';
-
-		loadInfoPage(message, nextQuestion, getTextItem('NEXT'));
+	$('.checkLocation').css('display', 'block');
+	
+	var message = getTextItem('LOCATION_WILL_BE_CHECKED') + ' ' + getTextItem('FOUND_COORDINATES') + ':<br/><br/>N '
+				  + position.coords.latitude.toFixed(6) + '<br/>E ' + position.coords.longitude.toFixed(6) + '<br/><br/>';
+	
+	var distanceText = getTextItem('DISTANCE_TO_EXPECTED POINT') + ':<br/>' + distance.toFixed(2) + 'm';
+	
+	if (distance > 25) {
+		distanceText = asWarning(distanceText);
 	}
+	
+	message += distanceText + '<br/><br/>';
+
+	loadInfoPage(message, nextQuestion, getTextItem('NEXT'));
 }
 
 function loadQuestionPage() {
@@ -328,6 +317,9 @@ function updateScore(pointNorm, position) {
 		points += Math.round(pointNorm / distance);
 	}
 	
+	scoreFileWriter.seek(0);
+	scoreFileWriter.write(points);
+	
 	updateScoreBoard();
 	
 	return distance;
@@ -359,14 +351,28 @@ function pad(number, length) {
 
 function uploadGPSFile() {
 	uploadFile(applicationDirectory.fullPath + '/' + GPS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, resetGPSFile);
+	// VG: Do not reset the GPS file, this file is used to calculate the points.
+	// The down-side of this is that the file gets larger and uploaded constantly.
+	// I have therefore decreased the upload frequency.
+	// XXX The proper solution would be to persist the score 
 }
 
 function resetGPSFile() {
-	alert('Upload completed!!!');
+	gpsFileWriter = null;
+	applicationDirectory.getFile(GPS_FILE_NAME, {create: false, exclusive: false}, resetGPSFileEntry, fail);
+}
+
+function resetGPSFileEntry(fileEntry) {
+	fileEntry.remove(createGPSFile);
 }
 
 function uploadAnswersFile(callBackFunction) {
-	uploadFile(applicationDirectory.fullPath + '/' + ANSWERS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, callBackFunction);
+	// TODO test this
+	uploadFile(applicationDirectory.fullPath + '/' + ANSWERS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, callBackFunction, notifyNoInternet);
+}
+
+function notifyNoInternet() {
+	alert(getTextItem('UNABLE_TO_CLOSE_APP') + ': ' + getTextItem('NO_INTERNET_AVAILABLE'));
 }
 
 function createAnswersFile() {
@@ -384,7 +390,7 @@ function answersFileWriterCreated(writer) {
 	answersFileWriter = writer;
 	
 	if (answersFileWriter.length == 0) {
-		answersFileWriter.write("Team ID,Question,Answer,Latitude,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
+		answersFileWriter.write("Question,Answer,Latitude,Longitude,Altitude,Accuracy,Altitude Accuracy,Heading,Speed,Timestamp\n");
 	} else {
 		answersFileWriter.seek(answersFileWriter.length);
 	}
@@ -392,7 +398,7 @@ function answersFileWriterCreated(writer) {
 
 function logAnswer(answer, position) {
 	if (answersFileWriter != null) {
-		message = teamId + "," + questionId + "," + answer + "," + position.coords.latitude + "," + position.coords.longitude + "," + position.coords.altitude + "," + position.coords.accuracy
+		message = questionId + "," + answer + "," + position.coords.latitude + "," + position.coords.longitude + "," + position.coords.altitude + "," + position.coords.accuracy
 				  + "," + position.coords.altitudeAccuracy + "," + position.coords.heading + "," + position.coords.speed + "," + position.timestamp + "\n";          		
 
 		answersFileWriter.write(message);
@@ -406,7 +412,8 @@ function logAnswer(answer, position) {
 function skipToCurrentAnswer() {
 	fileExists(ANSWERS_FILE_NAME, 
 				function() {
-					readPriorAnswers(createAnswersFile); 
+					// XXX you can probably reuse the fileEntry here
+					readPriorAnswers(createAnswersFile);
 				}, 
 				function() {
 					nextQuestion();
@@ -414,19 +421,30 @@ function skipToCurrentAnswer() {
 				});
 }
 
+function readPoints() {
+	fileExists(SCORE_FILE_NAME, 
+				function() {
+					// XXX you can probably reuse the fileEntry here
+					readScore(createScoreFile);
+				}, 
+				function() {
+					createScoreFile();
+				});
+}
+
 function readPriorAnswers(callBackFunction) {
-	openFileSystemRead('answers.txt', function(event) { readPriorAnswersFromFile(event.target.result, callBackFunction); }, true);
+	openFileSystemRead(ANSWERS_FILE_NAME, function(event) { readPriorAnswersFromFile(event.target.result, callBackFunction); }, true);
 }
 	
 /*
  * Fast forward through the answer checking process
  */
 function readPriorAnswersFromFile(answersText, callBackFunction) {
-	var answers = answersText.split('\n');
+	var previousAnswers = answersText.split('\n');
 	
 	// Start at 1: pos 0 will contain the headers
-	for (var i = 1; i < answers.length; i++) {
-		if (answers[i] == '') {
+	for (var i = 1; i < previousAnswers.length; i++) {
+		if (previousAnswers[i] == '') {
 			// Empty line, e.g. the end of the file
 			continue;
 		}
@@ -434,20 +452,13 @@ function readPriorAnswersFromFile(answersText, callBackFunction) {
 		questionId = i;
 		questionData = data[questionId];
 		
-		var answerComponents = answers[i].split(',');
-
-		var position = new Object();
-		position.coords = new Object();
-
-		position.coords.latitude = answerComponents[3];
-		position.coords.longitude = answerComponents[4];
-
-		var answer = answerComponents[2];
+		var answerComponents = previousAnswers[i].split(',');
+		var answer = answerComponents[1];
 
 		if (answer == undefined || answer == '') {
-			checkLocation(null, position, false);
+			continue;
 		} else {
-			answerQuestion(answer, position, false);
+			updateKnownInformation(checkAnswer(answer));
 		}
 	}
 	
@@ -455,34 +466,28 @@ function readPriorAnswersFromFile(answersText, callBackFunction) {
 	callBackFunction();
 }
 
-function startGPSPoints() {
-	fileExists(GPS_FILE_NAME, 
-			function() {
-				readPriorGPSPoints(createGPSFile); 
-			}, 
-			function() {
-				createGPSFile();
-			});
+function createScoreFile() {
+	applicationDirectory.getFile(SCORE_FILE_NAME, {
+		create : true,
+		exclusive : false
+	}, createScoreFileWriter, fail);
 }
 
-function readPriorGPSPoints(callBackFunction) {
-	openFileSystemRead('gpsdata.txt', 
-					   function(event) { 
-						   readPriorGPSPointsFromFile(event.target.result, callBackFunction); 
-					   }, 
-					   true);
+function createScoreFileWriter(fileEntry) {
+	createFileWriter(fileEntry, scoreFileWriterCreated);
+}
+
+function scoreFileWriterCreated(writer) {
+	scoreFileWriter = writer;
+}
+
+function readScore(callBackFunction) {
+	openFileSystemRead(SCORE_FILE_NAME, function(event) { readScoreFile(event.target.result, callBackFunction); }, true);
 }
 	
-/*
- * Fast forward through the answer checking process
- */
-function readPriorGPSPointsFromFile(gpsdata, callBackFunction) {
-	var items = gpsdata.split('\n');
-	var numberOfPoints = items.length - 1;
-
-	if (items[items.length - 1] == '') {
-		numberOfPoints--;
-	}
-
-	updateScore(numberOfPoints, null);
+function readScoreFile(scoreText, callBackFunction) {
+	points = parseInt(scoreText);
+	updateScoreBoard();
+	
+	callBackFunction();
 }

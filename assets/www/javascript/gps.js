@@ -25,15 +25,16 @@ function onGPSSuccess(position) {
 	gpsOn = true;
 	lastPosition = position;
 	
-	if (gpsFileWriter != null) {
-		message = "" + position.coords.latitude + "," + position.coords.longitude + "," + position.coords.altitude + "," + position.coords.accuracy
-					 + "," + position.coords.altitudeAccuracy + "," + position.coords.heading + "," + position.coords.speed + "," + position.timestamp + "\n";          		
-
-		gpsFileWriter.write(message);
-		$(document).trigger('gps:success');
-	} else {
-		alert("Readonly SD-card or file system not initialized;\nPosition at " + position.timestamp + ":\n" + position.coords.latitude + ", " + position.coords.longitude);
+	if (gpsFileWriter == null) {
+		// Possibly resetting gpsFileWriter, skip this coordinate
+		return;
 	}
+	
+	message = "" + position.coords.latitude + "," + position.coords.longitude + "," + position.coords.altitude + "," + position.coords.accuracy
+				 + "," + position.coords.altitudeAccuracy + "," + position.coords.heading + "," + position.coords.speed + "," + position.timestamp + "\n";          		
+
+	gpsFileWriter.write(message);
+	$(document).trigger('gps:success');
 }
 
 /**

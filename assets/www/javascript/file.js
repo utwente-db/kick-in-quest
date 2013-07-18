@@ -51,7 +51,11 @@ function onGetDirectoryFail(evt) {
 }
 
 // Upload GPS data to Server using HTTP POST
-function uploadFile(sourceFileURI, serverURI, params, callBackFunction) {
+function uploadFile(sourceFileURI, serverURI, params, callBackFunction, failFunction) {
+	if (failFunction == undefined) {
+		failFunction = onUploadFail;
+	}
+	
     var options = new FileUploadOptions();
     
     options.fileKey = "data";
@@ -65,7 +69,7 @@ function uploadFile(sourceFileURI, serverURI, params, callBackFunction) {
     options.params = params;
     
     var ft = new FileTransfer();
-    ft.upload(sourceFileURI, encodeURI(serverURI), callBackFunction, onUploadFail, options);	
+    ft.upload(sourceFileURI, encodeURI(serverURI), callBackFunction, failFunction, options);	
 }
 
 function onUploadOK(metadata) {
@@ -168,7 +172,7 @@ function writeZipFiles(callBackFunction) {
         if (!options.dir)
         	++filesInZip;
     }
-    alert('fiz: ' + filesInZip);
+
     extractedFiles = 0;
     for (filename in zipFile.files) {
         var options = zipFile.files[filename].options || {};
@@ -184,17 +188,13 @@ function writeZipFiles(callBackFunction) {
 }
 
 function storeUnzippedFile(fileEntry, callBackFunction) {
-	alert('suff ' + fileEntry.fullPath);
-	alert(fileEntry.toURL());
 	fileEntry.createWriter(function(writer) { storeUnzippedFileWriter(writer, callBackFunction); }, fail);
 }
 
 function storeUnzippedFileWriter(writer, callBackFunction) {
 	writer.onwriteend = function(evt) {
 		++extractedFiles;
-		alert('extracted so far: ' + extractedFiles);
 		if (extractedFiles >= filesInZip) {
-			alert('will call back now');
 			callBackFunction();
 			// Now delete the ZIP file (this is only here to save the SD-card's space, so there is more available for the coordinates).
 			applicationDirectory.getFile(LOCAL_PACKAGE_FILE_NAME, {
@@ -204,13 +204,12 @@ function storeUnzippedFileWriter(writer, callBackFunction) {
 	}
 	var fileName = writer.fileName.substring(writer.fileName.indexOf(FILE_SYSTEM_HOME) + FILE_SYSTEM_HOME.length + 1);
 	var data = zipFile.files[fileName].data;
-    alert('writing ' + fileName);
+
 	if (fileName.indexOf('.jpg') > 0 || fileName.indexOf('.jpeg') > 0) // binary, jpeg
 		data = "data:image/jpeg;base64," + JSZipBase64.encode(data);
 	else if (fileName.indexOf('.png') > 0) // binary, png
 		data = "data:image/png;base64," + JSZipBase64.encode(data);
 	writer.write(data);
-	alert('done');
 }
 
 function downloadError(error) {

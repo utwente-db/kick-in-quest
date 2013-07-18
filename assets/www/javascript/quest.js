@@ -70,7 +70,6 @@ function getPlatformName() {
 	if (navigator.userAgent.match(/Android/i)) {
 		return 'android';
 	} else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-		//TODO: overwrite applicationDirectory.fullPath here
 		return 'ios';
 	}
 }
