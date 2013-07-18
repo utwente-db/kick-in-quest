@@ -14,7 +14,7 @@ function initFileSystem() {
 		return;
 	}
 	
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, openFileSystem, failFS);
+	window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, openFileSystem, failFS);
 }
 
 function openFileSystem(fileSystemParam) {

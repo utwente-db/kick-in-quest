@@ -3,7 +3,7 @@ var questionId = 0;
 var questionData;
 var points = 0;
 var ANSWERS_FILE_NAME = 'answers.txt';
-var SCORE_FILE_NAME = 'score';
+var SCORE_FILE_NAME = '.score';
 
 var answersFileWriter = null;
 var scoreFileWriter = null;
@@ -46,6 +46,8 @@ function startGame(event) {
 
 function nextQuestion() {
 	questionId++;
+	
+	$('#questionTitle').html(getTextItem('QUESTION') + ' ' + questionId);
 
 	if (data[questionId] == undefined) {
 		finishGame();
@@ -235,8 +237,7 @@ function checkOpenQuestion() {
 
 function loadEnterBuildingQuestion() {
 	var message = getTextItem('GO_TO_BUILDING') + ' ' + questionData['building'] + '.<br/>' +
-				  getTextItem('PUSH_BUTTON') + '<br/><br/>' +
-				  asWarning(getTextItem('PUSH_TOO_EARLY')) + '<br/><br/>';
+				  getTextItem('PUSH_BUTTON') + '<br/><br/>';
 	
 	loadInfoPage(message, checkLocation, getTextItem('WE_ARE_INSIDE'));
 }
@@ -368,7 +369,7 @@ function resetGPSFileEntry(fileEntry) {
 
 function uploadAnswersFile(callBackFunction) {
 	// TODO test this
-	uploadFile(applicationDirectory.fullPath + '/' + ANSWERS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, callBackFunction, notifyNoInternet);
+	uploadFile(applicationDirectory.fullPath + '/' + ANSWERS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'answers', teamId: teamId, deviceId: deviceId}, callBackFunction, notifyNoInternet);
 }
 
 function notifyNoInternet() {
@@ -486,6 +487,10 @@ function readScore(callBackFunction) {
 }
 	
 function readScoreFile(scoreText, callBackFunction) {
+	if (scoreText == '') {
+		scoreText = 0;
+	}
+	
 	points = parseInt(scoreText);
 	updateScoreBoard();
 	

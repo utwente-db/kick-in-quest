@@ -10,8 +10,8 @@
 
 #wrapper {
 	height:			100%;
-	padding:		2%;
-	background-color:green;
+	padding:		5px;
+	background-color:white;
 	
 	-moz-box-sizing:border-box;
     -webkit-box-sizing: border-box;
@@ -19,9 +19,7 @@
 }
 
 #backgroundImage {
-	padding:		3%;
-	height:			94%;
-	width:			94%;
+	padding:		5px;
 }
 
 #backgroundImage, #welcomeImage {
@@ -36,10 +34,8 @@
 }
 
 .infoBox {
-	height:			79%;
 	background-color:white;
-	border:			0.3em solid green;
-	border-radius:  0.2em;
+	border:			1px solid green;
 	font-size:		1.0em;
 }
 
@@ -66,8 +62,7 @@
 
 .smallInfoBox, .answer {
 	background-color:white;
-	border:			0.3em solid green;
-	border-radius:  0.2em;
+	border:			1px solid green;
 	font-size:		1em;
 }
 
@@ -83,8 +78,8 @@
 	background-color: green;
 	color:			white;
 	font-weight: 	bold;
-	border-radius:  0.2em;
 	padding:		0.5em;
+	font-size:		20px;
 }
 
 .gameBox {
@@ -100,8 +95,7 @@
 }
 
 input {
-	border:			0.3em solid green;
-	border-radius:  0.2em;
+	border:			1px solid green;
 	color:			green;
 }
 
@@ -113,15 +107,44 @@ input {
 	float: 			right;
 }
 
-.scoreBox {
-	padding:		0.2em;
+#scoreBox {
+	padding:		3px;
 	background-color: white;
 }
 
-.scoreBox img {
+#scoreBox img {
 	height:			20px;
 }
 
-.scoreBox .spacer {
+#scoreBox .spacer {
  	height:			20px;
+}
+
+#questionTitle {
+	font-size: 		32px;
+	color: 			green;
+	font-weight: 	bold;
+	padding-top: 	5px;
+}
+
+#top {
+	height: 		50px;
+	border-bottom: 	1px solid green;
+}
+
+#logo {
+	 height: 		50px;
+	 float: 		left;
+}
+
+
+select#language {
+	background-color: white;
+	border:			1px solid green;
+	font-size:		20px;
+}
+
+#teamId {
+	border:			1px solid green;
+	font-size:		20px;
 }

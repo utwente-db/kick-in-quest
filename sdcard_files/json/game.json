@@ -8,8 +8,7 @@
 		"NO_NEW_INFORMATION": "Je krijgt geen nieuwe informatie over het eindpunt:",
 		"NEXT": "Volgende",
 		"GO_TO_BUILDING": "Ga nu naar",
-		"PUSH_BUTTON": "Druk op de knop hieronder als je <b>binnen</b> bent.",
-		"PUSH_TOO_EARLY": "Eerder drukken levert strafpunten op!",
+		"PUSH_BUTTON": "Druk op de knop hieronder als je <b>binnen</b> bent. Denk eraan: hoe dichter bij je bent, hoe meer punten je krijgt.",
 		"WE_ARE_INSIDE": "We zijn er!",
 		"LOCATION_WILL_BE_CHECKED": "De opgegeven locatie zal worden gecontroleerd.<br/>Ga weer naar buiten.",
 		"FOUND_COORDINATES": "We hebben de volgende coordinaten doorgekregen",
@@ -19,7 +18,8 @@
 		"CLICK_TO_CLOSE": "Klik hier om de antwoorden te uploaden en af te sluiten",
 		"GPS_DISABLED": "Het GPS signaal is uitgeschakeld of nog niet ontvangen. Zet dit aan om verder te gaan, of wacht tot dit signaal weer beschikbaar is.",
 		"UNABLE_TO_CLOSE_APP": "De app kan nog niet gesloten worden",
-		"NO_INTERNET_AVAILABLE": "Er is geen internetverbinding beschikbaar"
+		"NO_INTERNET_AVAILABLE": "Er is geen internetverbinding beschikbaar",
+		"QUESTION": "Vraag"
 	},
     "1": {
         "type": "multipleChoice",

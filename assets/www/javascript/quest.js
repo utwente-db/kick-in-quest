@@ -4,7 +4,7 @@ var deviceId = createUUID();
 
 var FILE_SYSTEM_HOME = 'KickInQuest' + teamId;
 
-var SERVER_NUMBER = getGETParam('teamId').substring(3);
+var SERVER_NUMBER = teamId.substring(3);
 var KICK_IN_QUEST_SERVER_URL = 'http://farm' + SERVER_NUMBER + '.ewi.utwente.nl:8080/kick-in-quest-server';
 
 var GET_QUESTIONS_URL = KICK_IN_QUEST_SERVER_URL + '/GetQuestions?language=' + language + '&teamId=' + teamId;
@@ -12,6 +12,59 @@ var ANSWER_QUESTIONS_URL = KICK_IN_QUEST_SERVER_URL + '/AnswerQuestions';
 
 var LOCAL_PACKAGE_FILE_NAME = 'quest-' + teamId + '.zip';
 var ANSWERS_FILE_NAME = "answers.txt";
+
+$(document).ready(initStyling);
+
+function initStyling() {
+	$('#backgroundImage').css('height', getBackgroundImageHeight());
+	$('#backgroundImage').css('width', getBackgroundImageWidth());
+}
+
+function getBackgroundImageHeight() {
+	var result = $('#wrapper').height() - $('#top').height() - $('#scoreBox').height();
+	
+	var topBorder = parseInt($('#top').css('border'));
+	
+	if (!isNaN(topBorder)) {
+		result -= topBorder;
+	}
+	
+	var topPadding = parseInt($('#top').css('padding'));
+	
+	if (!isNaN(topPadding)) {
+		result -= topPadding;
+	}
+	
+	var scoreBoxPadding = parseInt($('#scoreBox').css('padding'));
+	
+	if (!isNaN(scoreBoxPadding)) {
+		result -= scoreBoxPadding;
+	}
+	
+	var wrapperPadding = parseInt($('#wrapper').css('padding'));
+	
+	if (!isNaN(wrapperPadding)) {
+		result -= wrapperPadding;
+	}
+	
+	return result;
+}
+
+function getBackgroundImageWidth() {
+	var result = $('#wrapper').width();
+	
+	var wrapperPadding = parseInt($('#wrapper').css('padding'));
+	
+	if (!isNaN(wrapperPadding)) {
+		result -= wrapperPadding;
+	}
+	
+	return result;
+}
+
+function getBackgroundImageWidth() {
+	return $('#wrapper').width() - 10 /* paddings + borders */;
+}
 
 function loadInfoPage(infoText, callBackFunction, buttonText) {
 	$('.infoText').html(infoText);
@@ -38,7 +91,7 @@ function asWarning(message) {
 
 function getGETParam(paramName) {
 	var paramValuePairs = window.location.search.substring(1).split('&');
-	var result = undefined;
+	var result = '';
 
 	for (var i = 0; i < paramValuePairs.length; i++) {
 		var paramValueArray = paramValuePairs[i].split('=');
