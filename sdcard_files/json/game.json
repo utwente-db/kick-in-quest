@@ -13,10 +13,10 @@
 		"LOCATION_WILL_BE_CHECKED": "De opgegeven locatie zal worden gecontroleerd.<br/>Ga weer naar buiten.",
 		"FOUND_COORDINATES": "We hebben de volgende coordinaten doorgekregen",
 		"DISTANCE_TO_EXPECTED POINT": "De afstand tot het verwachte punt bedraagt",
-		"NO_LOCATION_FOUND": "Er is geen locatie gevonden. Zorg ervoor dat de GPS sensor aanstaat.",
 		"GAME_OVER": "Dit was de laatste vraag, het spel is afgelopen. Hartelijk dank voor het meedoen!",
 		"CLICK_TO_CLOSE": "Klik hier om de antwoorden te uploaden en af te sluiten",
-		"GPS_DISABLED": "Het GPS signaal is uitgeschakeld of nog niet ontvangen. Zet dit aan om verder te gaan, of wacht tot dit signaal weer beschikbaar is.",
+		"GPS_DISABLED": "Er is geen locatie gevonden. Zorg ervoor dat de GPS sensor aanstaat, en ga eventueel even naar buiten.",
+		"NO_LOCATION_FOR_ONE_MINUTE": "Er is al een minuut geen nieuwe GPS locatie gevonden. Zorg dat de GPS sensor aanstaat, dit is makkelijk punten verdienen.",
 		"UNABLE_TO_CLOSE_APP": "De app kan nog niet gesloten worden",
 		"NO_INTERNET_AVAILABLE": "Er is geen internetverbinding beschikbaar",
 		"QUESTION": "Vraag"

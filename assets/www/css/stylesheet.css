@@ -86,10 +86,6 @@
 	display: 		none;
 }
 
-.gameBox.infoBox {
-	height:			69%;
-}
-
 .warning {
 	color:			red;
 }

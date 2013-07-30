@@ -4,6 +4,8 @@ var questionData;
 var points = 0;
 var ANSWERS_FILE_NAME = 'answers.txt';
 var SCORE_FILE_NAME = '.score';
+var DEVICE_ID_FILE_NAME = '.deviceId';
+var deviceId = null;
 
 var answersFileWriter = null;
 var scoreFileWriter = null;
@@ -11,6 +13,8 @@ var scoreFileWriter = null;
 var knownLatitude = '??.??????';
 var knownLongitude = '?.??????';
 var knownPassword = '???????? ?????';
+
+var lastGpsSignal = new Date().getTime();
 
 $(document).bind('gps:success', gpsSuccess);
 
@@ -24,6 +28,7 @@ function loadGame() {
 	$(document).bind('appDirectory:loaded', loadGameFromJSON);
 	$(document).bind('appDirectory:loaded', createGPSFile);
 	$(document).bind('appDirectory:loaded', readPoints);
+	$(document).bind('appDirectory:loaded', readOrCreateDeviceId);
 
 	initFileSystem();
 	startGPSTracking();
@@ -72,6 +77,7 @@ function nextQuestion() {
 
 function gpsSuccess() {
 	updateScore(1);
+	lastGpsSignal = new Date().getTime();
 }
 
 function finishGame() {
@@ -92,7 +98,7 @@ function closeApp() {
 
 function answerQuestion(answer) {
 	if (typeof lastPosition === 'undefined') {
-		alert(getTextItem('NO_LOCATION_FOUND'));
+		alert(getTextItem('GPS_DISABLED'));
 		return;
 	}
 	
@@ -160,7 +166,7 @@ function updateKnownInformation(answerCorrect) {
 
 function checkLocation(clickEvent) {
 	if (typeof lastPosition === 'undefined') {
-		alert(getTextItem('NO_LOCATION_FOUND'));
+		alert(getTextItem('GPS_DISABLED'));
 		return;
 	}
 		
@@ -351,11 +357,12 @@ function pad(number, length) {
 }
 
 function uploadGPSFile() {
+	if (new Date().getTime() > (lastGpsSignal + 60000)) {
+		alert(getTextItem('NO_LOCATION_FOR_ONE_MINUTE'));
+		return;
+	}
+	
 	uploadFile(applicationDirectory.fullPath + '/' + GPS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, resetGPSFile);
-	// VG: Do not reset the GPS file, this file is used to calculate the points.
-	// The down-side of this is that the file gets larger and uploaded constantly.
-	// I have therefore decreased the upload frequency.
-	// XXX The proper solution would be to persist the score 
 }
 
 function resetGPSFile() {
@@ -422,17 +429,6 @@ function skipToCurrentAnswer() {
 				});
 }
 
-function readPoints() {
-	fileExists(SCORE_FILE_NAME, 
-				function() {
-					// XXX you can probably reuse the fileEntry here
-					readScore(createScoreFile);
-				}, 
-				function() {
-					createScoreFile();
-				});
-}
-
 function readPriorAnswers(callBackFunction) {
 	openFileSystemRead(ANSWERS_FILE_NAME, function(event) { readPriorAnswersFromFile(event.target.result, callBackFunction); }, true);
 }
@@ -467,6 +463,17 @@ function readPriorAnswersFromFile(answersText, callBackFunction) {
 	callBackFunction();
 }
 
+function readPoints() {
+	fileExists(SCORE_FILE_NAME, 
+				function() {
+					// XXX you can probably reuse the fileEntry here
+					readScore(createScoreFile);
+				}, 
+				function() {
+					createScoreFile();
+				});
+}
+
 function createScoreFile() {
 	applicationDirectory.getFile(SCORE_FILE_NAME, {
 		create : true,
@@ -495,4 +502,44 @@ function readScoreFile(scoreText, callBackFunction) {
 	updateScoreBoard();
 	
 	callBackFunction();
+}
+
+function readOrCreateDeviceId() {
+	fileExists(DEVICE_ID_FILE_NAME, 
+				function() {
+					// XXX you can probably reuse the fileEntry here
+					readDeviceId();
+				}, 
+				function() {
+					createDeviceIdFile();
+				});
+}
+
+function createDeviceIdFile() {
+	applicationDirectory.getFile(DEVICE_ID_FILE_NAME, {
+		create : true,
+		exclusive : false
+	}, createDeviceIdFileWriter, fail);
+}
+
+function createDeviceIdFileWriter(fileEntry) {
+	createFileWriter(fileEntry, deviceIdFileWriterCreated);
+}
+
+function deviceIdFileWriterCreated(writer) {
+	deviceIdFileWriter = writer;
+	createNewDeviceId();
+	writer.write(deviceId);
+}
+
+function readDeviceId(callBackFunction) {
+	openFileSystemRead(DEVICE_ID_FILE_NAME, function(event) { readDeviceIdFile(event.target.result); }, true);
+}
+
+function readDeviceIdFile(deviceIdText) {
+	deviceId = deviceIdText;
+}
+
+function createNewDeviceId() {
+	deviceId = getPlatformName() + '-' + createUUID();
 }

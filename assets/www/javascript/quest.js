@@ -1,6 +1,5 @@
 var teamId = getGETParam('teamId');
 var language = getGETParam('language');
-var deviceId = createUUID();
 
 var FILE_SYSTEM_HOME = 'KickInQuest' + teamId;
 
