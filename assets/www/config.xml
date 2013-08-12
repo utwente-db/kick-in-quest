@@ -34,8 +34,8 @@
 
     <icon src="icon.png"/>
     
-    <icon src="res/icon/ios/icon57.png"            gap:platform="ios"        width="57" height="57" />
-    <icon src="res/icon/ios/icon72.png"            gap:platform="ios"        width="72" height="72" />
+    <icon src="icon/ios/icon57.png"            gap:platform="ios"        width="57" height="57" />
+    <icon src="icon/ios/icon72.png"            gap:platform="ios"        width="72" height="72" />
     
     <access origin="*"/>
 
