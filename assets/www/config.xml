@@ -21,7 +21,7 @@
         xmlns:gap = "http://phonegap.com/ns/1.0"
         id        = "nl.utwente.db.kick-in-quest"
         version   = "1.0.0">
-    <name>Kick-In Quest</name>
+    <name>Kick-In Quest.</name>
 
     <description>
          The Kick-In Quest is a treasure hunt through Enschede as a part of this year's Kick-In. 
