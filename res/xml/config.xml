@@ -18,8 +18,9 @@
  under the License.
 -->
 <widget xmlns     = "http://www.w3.org/ns/widgets"
-        id        = "io.cordova.helloCordova"
-        version   = "2.0.0">
+        xmlns:gap = "http://phonegap.com/ns/1.0"
+        id        = "nl.utwente.db.kick-in-quest"
+        version   = "1.0.0">
     <name>Kick-In Quest</name>
 
     <description>
@@ -32,6 +33,9 @@
     
 
     <icon src="icon.png"/>
+    
+    <icon src="icon57.png" gap:platform="ios" width="57" height="57" />
+	<icon src="icon72.png" gap:platform="ios" width="72" height="72" />
     
     <access origin="*"/>
 
