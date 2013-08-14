@@ -21,10 +21,6 @@
     },
     "6": {
         "infoText": "In case of a tie, the <b>fastest team</b> will be appointed as the winner.",
-        "buttonText": "More..."
-    },
-    "7": {
-        "infoText": "When answering open questions, EVERY word of the answer shall start with a <b>capital letter</b>.",
         "buttonText": "To the first question"
     }
 }

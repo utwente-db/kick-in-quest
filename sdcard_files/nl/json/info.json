@@ -21,10 +21,6 @@
     },
     "6": {
         "infoText": "Bij een gelijk aantal punten, telt de <b>snelste tijd</b>.",
-        "buttonText": "Lees verder..."
-    },
-    "7": {
-        "infoText": "Bij open vragen moet ELK woord beginnen met een <b>hoofdletter</b>.",
         "buttonText": "Naar de eerste vraag"
     }
 }
