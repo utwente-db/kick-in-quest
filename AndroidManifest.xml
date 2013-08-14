@@ -41,7 +41,7 @@
 
 <!--        <uses-library android:name="com.google.android.maps" /> -->
 
-       <activity android:name="nl.utwente.db.kickinquest.KickInQuestActivity" android:label="KickInQuest">
+       <activity android:name="nl.utwente.db.kickinquest.KickInQuestActivity" android:label="Kick-In Quest">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"></category>
                 <action android:name="android.intent.action.MAIN"></action>
