@@ -1,0 +1,93 @@
+{
+	"textItems": {
+		"THE_ANSWER_IS": "The answer is",
+		"TO_ANSWER": "Answer",
+		"CORRECT": "CORRECT",
+		"WRONG": "WRONG",
+		"NEW_INFORMATION": "You get new information on the end point:",
+		"NO_NEW_INFORMATION": "You do not get new information on the end point:",
+		"NEXT": "Next",
+		"GO_TO_BUILDING": "Go to",
+		"PUSH_BUTTON": "Push the button below when you are <b>inside</b>. Remember: the closer you are, the more points you get.",
+		"WE_ARE_INSIDE": "We are there!",
+		"LOCATION_WILL_BE_CHECKED": "The given location will be checked.<br/>Go outside again.",
+		"FOUND_COORDINATES": "We have received the following coordinates",
+		"DISTANCE_TO_EXPECTED POINT": "The distance to the expected point is",
+		"GAME_OVER": "This was the last question, the game is over. Thanks for playing!",
+		"CLICK_TO_CLOSE": "Click here to upload the answers and close the app",
+		"GPS_DISABLED": "No location has been found. Make sure the GPS sensor is on, and make sure you have been outside.",
+		"NO_LOCATION_FOR_ONE_MINUTE": "No location has been found in the past minute. Make sure the GPS sensor is on, this is an easy way to earn points.",
+		"UNABLE_TO_CLOSE_APP": "The app cannot be closed yet",
+		"NO_INTERNET_AVAILABLE": "There is no internet connection available",
+		"QUESTION": "Question"
+	},
+    "1": {
+        "type": "multipleChoice",
+        "question": "Which church is on this picture?",
+        "image": "images/grote-kerk.jpg",
+        "answers": {
+            "A": "Grote Kerk",
+            "B": "Oude Kerk",
+            "C": "St. Anne Kerk",
+            "D": "Antoniuskerk"
+        },
+        "correctAnswer": "64d7d88c55b65fba782cb3454ff123f3",
+        "explanation": "The \"Grote Kerk\" is located on the \"Oude Markt\", the center of the Enschede nightlife.",
+        "latitude": "52.220556",
+        "longitude": "6.895556",
+        "reward": {
+        	"type": "coordinateDigit",
+        	"latOrLon": "latitude",
+        	"position": "3",
+        	"digit": "6"
+    	}
+    },
+    "2": {
+        "type": "enterBuilding",
+        "building": "the \"Grote Kerk\"",
+        "image": "images/grote-kerk.jpg",
+        "latitude": "52.220556",
+        "longitude": "6.895556",
+        "reward": {
+        	"type": "coordinateDigit",
+        	"latOrLon": "latitude",
+        	"position": "4",
+        	"digit": "6"
+    	}
+    },
+    "3": {
+        "type": "multipleChoice",
+        "question": "Which bar is not located on this square?",
+        "image": "images/grote-kerk.jpg",
+        "answers": {
+            "A": "Paddy's",
+            "B": "Molly Malone's",
+            "C": "Aspen Valley",
+            "D": "Vestingbar"
+        },
+        "correctAnswer": "006c02db0810c58e35a51a029c0d388b",
+        "explanation": "The Vestingbar is located in the Bastille on campus.",
+        "latitude": "52.220556",
+        "longitude": "6.895556",
+        "reward": {
+        	"type": "coordinateDigit",
+        	"latOrLon": "longitude",
+        	"position": "3",
+        	"digit": "6"
+    	}
+    },
+    "4": {
+        "type": "openQuestion",
+        "question": "What is the price of a beer at Aspen Valley?",
+        "image": "images/grote-kerk.jpg",
+        "correctAnswer": "5d7fda00da3ed1907d6adf29237c3cf9",
+        "explanation": "",
+        "latitude": "52.220556",
+        "longitude": "6.895556",
+        "reward": {
+        	"type": "password",
+        	"position": "1,3,5",
+        	"letter": "A"
+    	}
+	}
+}

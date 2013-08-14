@@ -1,0 +1,30 @@
+{
+    "1": {
+        "infoText": "Om mee te doen aan dit spel, hebben wij jouw goedkeuring nodig voor het opnemen van het GPS signaal.<br\/> Deze informatie zal ook gebruikt worden in wetenschappelijk onderzoek naar GPS analyse.<br\/> Hierbij zullen geen gegevens worden doorgegeven waaruit te achterhalen is van wie welk signaal is.",
+        "buttonText": "Ik stem toe"
+    },
+    "2": {
+        "infoText": "Je kunt nu beginnen aan het spel.<br/> Eerst krijgen jullie een aantal vragen, waarbij je de stad leert kennen. Elk goed antwoord levert informatie op over het eindpunt.",
+        "buttonText": "Lees verder..."
+    },
+    "3": {
+        "infoText": "Om dit spel te winnen, moet je het hoogste aantal punten behalen. Bij elke vraag hoort een locatie. Punten kunnen behaald worden door vragen <b>dicht mogelijk</b> bij die locatie <b>goed</b> te beantwoorden. Een vraag over de Oude Markt moet dus beantwoord worden <b>op</b> de Oude Markt, ook als je het antwoord al weet.",
+        "buttonText": "Lees verder..."
+    },
+    "4": {
+        "infoText": "Verder krijg je &eacute;&eacute;n punt per doorgegeven GPS co&ouml;rdinaat.",
+        "buttonText": "Lees verder..."
+    },
+    "5": {
+        "infoText": "Let op: bij het gebruik van <b>meerdere telefoons</b> worden de punten <b>opgeteld</b>. Laat dus zo veel mogelijk teamleden de app gebruiken.",
+        "buttonText": "Lees verder..."
+    },
+    "6": {
+        "infoText": "Bij een gelijk aantal punten, telt de <b>snelste tijd</b>.",
+        "buttonText": "Lees verder..."
+    },
+    "7": {
+        "infoText": "Bij open vragen moet ELK woord beginnen met een <b>hoofdletter</b>.",
+        "buttonText": "Naar de eerste vraag"
+    }
+}

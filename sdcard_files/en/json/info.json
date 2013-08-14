@@ -1,0 +1,30 @@
+{
+    "1": {
+        "infoText": "To participate in this game, we need your approval to record your GPS signal.<br\/> This information will also be used in scientific research on trajectory analysis.<br\/>No data will be shared from which can be detected which signal belongs to whom.",
+        "buttonText": "I accept"
+    },
+    "2": {
+        "infoText": "You can now start the game.<br/>First you will get some questions, which you will let you get to know the town. Every correct answer will be rewarded with information on the end point.",
+        "buttonText": "More..."
+    },
+    "3": {
+        "infoText": "To win this game, you need to have the highest number of points. Each question belongs to a location. Points can be obtained by answering questions <b>right</b>, and <b>as close as possible</b> to that location. A question about the Oude Markt should therefore be answered <b>at</b> the Oude Markt, even if you know the answer without going there.",
+        "buttonText": "More..."
+    },
+    "4": {
+        "infoText": "Furthermore, you will be awarded one point per GPS coordinate.",
+        "buttonText": "More..."
+    },
+    "5": {
+        "infoText": "Mind you: when a team uses multiple devices, the number of points will be <b>added up</b>. We therefore recommend you to use as many devices as possible.",
+        "buttonText": "More..."
+    },
+    "6": {
+        "infoText": "In case of a tie, the <b>fastest team</b> will be appointed as the winner.",
+        "buttonText": "More..."
+    },
+    "7": {
+        "infoText": "When answering open questions, EVERY word of the answer shall start with a <b>capital letter</b>.",
+        "buttonText": "To the first question"
+    }
+}
