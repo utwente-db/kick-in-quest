@@ -19,8 +19,9 @@
 -->
 <widget xmlns     = "http://www.w3.org/ns/widgets"
         xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "nl.utwente.db.kick-in-quest"
+        id        = "nl.utwente.db.kickinquest"
         version   = "1.0.0">
+        <!-- Sorry, I messed up here: nl.utwente.db.kick-in-quest for iOS, nl.utwente.db.kickinquest for Android -->
     <name>Kick-In Quest</name>
 
     <description>
