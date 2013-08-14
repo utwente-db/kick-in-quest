@@ -24,7 +24,9 @@ function downloadPackage() {
 			initInfoScreen(); 
 		},
 		function() {
-			downloadFile(GET_QUESTIONS_URL, LOCAL_PACKAGE_FILE_NAME, function(event) { readZIPFile(event, initInfoScreen); });
+			downloadFile(GET_QUESTIONS_URL, LOCAL_PACKAGE_FILE_NAME, function(event) {
+				readZIPFile(event, initInfoScreen); 
+			});
 		});
 }
 
