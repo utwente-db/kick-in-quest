@@ -45,14 +45,20 @@ function initInfoScreen() {
 }
 
 function startInfoScreen(event) {
+	alert('sis');
+	
 	data = JSON.parse(event.target.result);
+
+	alert('parsed');
 	nextInfoItem();
 }
 
 function nextInfoItem() {
+	alert('nii');
 	id++;
 	
 	if (typeof data[id] == 'undefined') {
+		alert('undef')
 		goToGame();
 		return;
 	}
