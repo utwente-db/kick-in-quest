@@ -147,8 +147,8 @@ function readFile(file, callBackFunction, asText) {
 	alert('rf')
 	var reader = new FileReader();
 	 
-	reader.onload = callBackFunction;
-	reader.onerror = fail;
+	reader.onload = function(param) { alert('onload'); callBackFunction(param) };
+	reader.onerror = function(param) { alert('fail'); fail(param) };
 	 
 	if (asText) {
 		reader.readAsText(file); 
