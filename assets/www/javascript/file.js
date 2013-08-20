@@ -47,11 +47,11 @@ function createFileWriter(fileEntry, callbackFunction) {
 }
 
 function failFS(evt) {
-	alert("Opening file System failed with error " + evt.code);
+	fail(evt, "Opening file System failed with error " + evt.code);
 }
 
 function onGetDirectoryFail(evt) {
-	alert("Creating directory failed with error " + evt.code);
+	fail(evt, "Creating directory failed with error " + evt.code);
 }
 
 // Upload GPS data to Server using HTTP POST
@@ -84,7 +84,8 @@ function onUploadOK(metadata) {
 }
 
 function onUploadFail(error) {
-//	alert("An error has occurred: Code = " + error.code);
+	fail(error, "An error has occurred: Code = " + error.code);
+	
 	console.log("upload error source " + error.source);
 	console.log("upload error target " + error.target);
 }
@@ -98,6 +99,8 @@ function downloadFile(downloadURI, destinationFileName, callBackFunction) {
 }
 
 function onFileSystemSuccess(downloadURI, destinationFileName, callBackFunction) {
+	alert('ofss');
+	
 	var fileTransfer = new FileTransfer();
 	
 	if (applicationDirectory == null) {
@@ -112,6 +115,8 @@ function onFileSystemSuccess(downloadURI, destinationFileName, callBackFunction)
 }
 
 function downloadSuccess(theFile, callBackFunction)  {
+	alert('ds');
+	
 	if (applicationDirectory != null) {
 		openFileSystemRead(LOCAL_PACKAGE_FILE_NAME, callBackFunction);
 	} else {
@@ -148,15 +153,25 @@ function readFile(file, callBackFunction, asText) {
 }
 
 function createZipFolders(callBackFunction) {
+	alert('czf');
 	 var foldersInZip = 0;
+	 
      for (filename in zipFile.files) {
          var options = zipFile.files[filename].options || {};
-    	 if (options.dir)
+    	 
+         if (options.dir) {
     		 ++foldersInZip;
+    	 }
      }
+     
      var createdFolders = 0;
+     
      var onCreateDirectory = function(parent) {
     	 ++createdFolders;
+    	 
+    	 var progress = 50 + (createdFolders / foldersInZip) * 25;
+    	 $('loaderBarProgress').css('width', progress + '%');
+    	 
     	 if (createdFolders >= foldersInZip) {
     		 writeZipFiles(callBackFunction);
     	 }
@@ -164,13 +179,17 @@ function createZipFolders(callBackFunction) {
      
      for (filename in zipFile.files) {
          var options = zipFile.files[filename].options || {};
-    	 if (options.dir)
+         
+    	 if (options.dir) {
     		 applicationDirectory.getDirectory(filename, {create : true, exclusive : false}, onCreateDirectory, fail);
+    	 }
      }
 }
 
 function writeZipFiles(callBackFunction) {
+	alert('wzf');
 	filesInZip = 0;
+	
     for (filename in zipFile.files) {
         var options = zipFile.files[filename].options || {};
         if (!options.dir)
@@ -178,6 +197,7 @@ function writeZipFiles(callBackFunction) {
     }
 
     extractedFiles = 0;
+    
     for (filename in zipFile.files) {
         var options = zipFile.files[filename].options || {};
 	    
@@ -198,6 +218,7 @@ function storeUnzippedFile(fileEntry, callBackFunction) {
 function storeUnzippedFileWriter(writer, callBackFunction) {
 	writer.onwriteend = function(evt) {
 		++extractedFiles;
+
 		if (extractedFiles >= filesInZip) {
 			callBackFunction();
 			// Now delete the ZIP file (this is only here to save the SD-card's space, so there is more available for the coordinates).
@@ -217,13 +238,31 @@ function storeUnzippedFileWriter(writer, callBackFunction) {
 }
 
 function downloadError(error) {
+	fail(error, 'Failed to download the data package (error ' + error.code + '), please check if you have enough space on your SD card.');
+	
 	console.log("download error source " + error.source);
 	console.log("download error target " + error.target);
-	console.log("upload error code: " + error.code);
+	console.log("download error code: " + error.code);
 }
 
-function fail(evt) {
-	console.log(evt.target.error.code);
+function displayError(errorMessage) {
+	$('.infoText').val();
+	$('.infoText').css('color', 'red');
+	$('.infoButton').css('display', 'none');
+}
+
+function fail(evtOrError, message) {
+	if (message != undefined) {
+		displayError(message);		
+	}
+	
+	if (evtOrError.target != undefined) {
+		evtOrError = evtOrError.target.error;
+	}
+	
+	if (evtOrError != undefined) {
+		console.log(evtOrError.code);
+	}
 }
 
 /*

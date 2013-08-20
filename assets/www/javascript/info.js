@@ -38,6 +38,8 @@ function readZIPFile(event, callBackFunction) {
 }
 
 function initInfoScreen() {
+	$('#loaderBar').css('display', 'none');
+	
 	openFileSystemRead('json/info.json', startInfoScreen, true);
 }
 
