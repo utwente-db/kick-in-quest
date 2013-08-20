@@ -99,8 +99,6 @@ function downloadFile(downloadURI, destinationFileName, callBackFunction) {
 }
 
 function onFileSystemSuccess(downloadURI, destinationFileName, callBackFunction) {
-	alert('ofss');
-	
 	var fileTransfer = new FileTransfer();
 	
 	if (applicationDirectory == null) {
@@ -115,7 +113,7 @@ function onFileSystemSuccess(downloadURI, destinationFileName, callBackFunction)
 }
 
 function downloadSuccess(theFile, callBackFunction)  {
-	alert('ds');
+	$('.infoText').html('Download complete. Unzipping...');
 	
 	if (applicationDirectory != null) {
 		openFileSystemRead(LOCAL_PACKAGE_FILE_NAME, callBackFunction);
@@ -127,8 +125,6 @@ function downloadSuccess(theFile, callBackFunction)  {
 }
 
 function openFileSystemRead(pathToFile, callBackFunction, asText) {
-	alert('ofsr');
-	
 	if (asText == undefined) {
 		asText = false;
 	}
@@ -139,7 +135,6 @@ function openFileSystemRead(pathToFile, callBackFunction, asText) {
 }
 
 function readFileEntry(fileEntry, callBackFunction, asText) {
-	alert('rfe');
 	fileEntry.file(function(file) { readFile(file, callBackFunction, asText); }, fail);
 }
 
@@ -225,9 +220,6 @@ function storeUnzippedFileWriter(writer, callBackFunction) {
 		++extractedFiles;
 
 		if (extractedFiles >= filesInZip) {
-			alert('will call cbf');
-			alert(callBackFunction != undefined)
-			
 			callBackFunction();
 			// Now delete the ZIP file (this is only here to save the SD-card's space, so there is more available for the coordinates).
 			applicationDirectory.getFile(LOCAL_PACKAGE_FILE_NAME, {
@@ -239,12 +231,8 @@ function storeUnzippedFileWriter(writer, callBackFunction) {
 	var data = zipFile.files[fileName].data;
 
 	if (fileName.indexOf('.jpg') > 0 || fileName.indexOf('.jpeg') > 0) {
-		alert(fileName);
-		
 		// binary, jpeg
 		data = "data:image/jpeg;base64," + JSZipBase64.encode(data);
-		
-		alert('done');
 	} else if (fileName.indexOf('.png') > 0) {
 		// binary, png
 		data = "data:image/png;base64," + JSZipBase64.encode(data);
