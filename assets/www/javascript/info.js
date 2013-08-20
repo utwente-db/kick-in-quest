@@ -46,6 +46,9 @@ function initInfoScreen() {
 
 function startInfoScreen(event) {
 	alert('sis');
+	alert(typeof JSON.parse);
+	alert(typeof event);
+	alert(event.target.result.length);
 	
 	data = JSON.parse(event.target.result);
 
