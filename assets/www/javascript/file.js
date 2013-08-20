@@ -220,6 +220,7 @@ function storeUnzippedFile(fileEntry, callBackFunction) {
 function storeUnzippedFileWriter(writer, callBackFunction) {
 	writer.onwriteend = function(evt) {
 		++extractedFiles;
+		alert(extractedFiles + "/" + filesInZip);
 
 		if (extractedFiles >= filesInZip) {
 			callBackFunction();
