@@ -248,7 +248,7 @@ function storeUnzippedFileWriter(writer, callBackFunction) {
 	}
 	
 	writer.onerror = function(error) {
-		alert('Unable to write file ' + fileName + ' error: ' + error.code);
+		alert('Unable to write file ' + fileName + ', error: ' + error);
 	}
 
 	writer.write(data);
