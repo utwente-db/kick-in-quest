@@ -229,6 +229,10 @@ function storeUnzippedFileWriter(writer, callBackFunction) {
 	}
 	var fileName = writer.fileName.substring(writer.fileName.indexOf(FILE_SYSTEM_HOME) + FILE_SYSTEM_HOME.length + 1);
 	var data = zipFile.files[fileName].data;
+	
+	if (fileName == 'json/info.json') {
+		alert(data);
+	}
 
 	if (fileName.indexOf('.jpg') > 0 || fileName.indexOf('.jpeg') > 0) {
 		// binary, jpeg
