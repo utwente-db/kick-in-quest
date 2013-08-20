@@ -192,8 +192,10 @@ function writeZipFiles(callBackFunction) {
 	
     for (filename in zipFile.files) {
         var options = zipFile.files[filename].options || {};
-        if (!options.dir)
+        
+        if (!options.dir) {
         	++filesInZip;
+        }
     }
 
     extractedFiles = 0;
@@ -230,10 +232,18 @@ function storeUnzippedFileWriter(writer, callBackFunction) {
 	var fileName = writer.fileName.substring(writer.fileName.indexOf(FILE_SYSTEM_HOME) + FILE_SYSTEM_HOME.length + 1);
 	var data = zipFile.files[fileName].data;
 
-	if (fileName.indexOf('.jpg') > 0 || fileName.indexOf('.jpeg') > 0) // binary, jpeg
+	if (fileName.indexOf('.jpg') > 0 || fileName.indexOf('.jpeg') > 0) {
+		alert(fileName);
+		
+		// binary, jpeg
 		data = "data:image/jpeg;base64," + JSZipBase64.encode(data);
-	else if (fileName.indexOf('.png') > 0) // binary, png
+		
+		alert('done');
+	} else if (fileName.indexOf('.png') > 0) {
+		// binary, png
 		data = "data:image/png;base64," + JSZipBase64.encode(data);
+	}
+
 	writer.write(data);
 }
 
