@@ -38,26 +38,17 @@ function readZIPFile(event, callBackFunction) {
 }
 
 function initInfoScreen() {
-	alert('iis');
 	$('#loaderBar').css('display', 'none');
 	
 	openFileSystemRead('json/info.json', startInfoScreen, true);
 }
 
 function startInfoScreen(event) {
-	alert('sis');
-	alert(typeof JSON.parse);
-	alert(typeof event);
-	alert(event.target.result.length);
-	
 	data = JSON.parse(event.target.result);
-
-	alert('parsed');
 	nextInfoItem();
 }
 
 function nextInfoItem() {
-	alert('nii');
 	id++;
 	
 	if (typeof data[id] == 'undefined') {

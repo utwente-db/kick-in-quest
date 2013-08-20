@@ -139,11 +139,10 @@ function readFileEntry(fileEntry, callBackFunction, asText) {
 }
 
 function readFile(file, callBackFunction, asText) {
-	alert('rf')
 	var reader = new FileReader();
 	 
-	reader.onload = function(param) { alert('onload'); callBackFunction(param) };
-	reader.onerror = function(param) { alert('fail'); fail(param) };
+	reader.onload = callBackFunction;
+	reader.onerror = fail;
 	 
 	if (asText) {
 		reader.readAsText(file); 
@@ -249,7 +248,7 @@ function storeUnzippedFileWriter(writer, callBackFunction) {
 	}
 	
 	writer.onerror = function(error) {
-		alert('Unable to write file ' + fileName);
+		alert('Unable to write file ' + fileName + ' error: ' + error.code);
 	}
 
 	writer.write(data);
