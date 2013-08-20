@@ -206,13 +206,18 @@ function writeZipFiles(callBackFunction) {
         								 {create : true, exclusive : false}, 
         								 function(fileEntry) { 
         									 storeUnzippedFile(fileEntry, callBackFunction); 
-        								 }, fail);
+        								 }, 
+        								 fail);
         }
     }
 }
 
 function storeUnzippedFile(fileEntry, callBackFunction) {
-	fileEntry.createWriter(function(writer) { storeUnzippedFileWriter(writer, callBackFunction); }, fail);
+	fileEntry.createWriter(
+			function(writer) { 
+				storeUnzippedFileWriter(writer, callBackFunction); 
+			}, 
+			fail);
 }
 
 function storeUnzippedFileWriter(writer, callBackFunction) {
@@ -221,25 +226,30 @@ function storeUnzippedFileWriter(writer, callBackFunction) {
 
 		if (extractedFiles >= filesInZip) {
 			callBackFunction();
+			
 			// Now delete the ZIP file (this is only here to save the SD-card's space, so there is more available for the coordinates).
 			applicationDirectory.getFile(LOCAL_PACKAGE_FILE_NAME, {
 				exclusive : false
-			}, function(fileEntry) { fileEntry.remove(null, fail); }, fail);
+			}, 
+			function(fileEntry) { 
+				fileEntry.remove(null, fail); 
+			}, 
+			fail);
 		}
 	}
 	var fileName = writer.fileName.substring(writer.fileName.indexOf(FILE_SYSTEM_HOME) + FILE_SYSTEM_HOME.length + 1);
 	var data = zipFile.files[fileName].data;
 	
-	if (fileName == 'json/info.json') {
-		alert(data);
-	}
-
 	if (fileName.indexOf('.jpg') > 0 || fileName.indexOf('.jpeg') > 0) {
 		// binary, jpeg
 		data = "data:image/jpeg;base64," + JSZipBase64.encode(data);
 	} else if (fileName.indexOf('.png') > 0) {
 		// binary, png
 		data = "data:image/png;base64," + JSZipBase64.encode(data);
+	}
+	
+	writer.onerror = function(error) {
+		alert('Unable to write file ' + fileName);
 	}
 
 	writer.write(data);
@@ -264,12 +274,14 @@ function fail(evtOrError, message) {
 		displayError(message);		
 	}
 	
-	if (evtOrError.target != undefined) {
-		evtOrError = evtOrError.target.error;
-	}
-	
 	if (evtOrError != undefined) {
-		console.log(evtOrError.code);
+		if (evtOrError.target != undefined && evtOrError.target.error != undefined) {
+			evtOrError = evtOrError.target.error;
+		}
+		
+		if (evtOrError.code != undefined) {
+			console.log(evtOrError.code);
+		}
 	}
 }
 
