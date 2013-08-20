@@ -127,6 +127,8 @@ function downloadSuccess(theFile, callBackFunction)  {
 }
 
 function openFileSystemRead(pathToFile, callBackFunction, asText) {
+	alert('ofsr');
+	
 	if (asText == undefined) {
 		asText = false;
 	}
@@ -137,23 +139,25 @@ function openFileSystemRead(pathToFile, callBackFunction, asText) {
 }
 
 function readFileEntry(fileEntry, callBackFunction, asText) {
+	alert('rfe');
 	fileEntry.file(function(file) { readFile(file, callBackFunction, asText); }, fail);
 }
 
 function readFile(file, callBackFunction, asText) {
-	 var reader = new FileReader();
+	alert('rf')
+	var reader = new FileReader();
 	 
-	 reader.onload = callBackFunction;
+	reader.onload = callBackFunction;
+	reader.onerror = fail;
 	 
-	 if (asText) {
+	if (asText) {
 		reader.readAsText(file); 
-	 } else {
+	} else {
 		reader.readAsDataURL(file);
-	 }
+	}
 }
 
 function createZipFolders(callBackFunction) {
-	alert('czf');
 	 var foldersInZip = 0;
 	 
      for (filename in zipFile.files) {
@@ -187,7 +191,6 @@ function createZipFolders(callBackFunction) {
 }
 
 function writeZipFiles(callBackFunction) {
-	alert('wzf');
 	filesInZip = 0;
 	
     for (filename in zipFile.files) {
@@ -220,9 +223,11 @@ function storeUnzippedFile(fileEntry, callBackFunction) {
 function storeUnzippedFileWriter(writer, callBackFunction) {
 	writer.onwriteend = function(evt) {
 		++extractedFiles;
-		alert(extractedFiles + "/" + filesInZip);
 
 		if (extractedFiles >= filesInZip) {
+			alert('will call cbf');
+			alert(callBackFunction != undefined)
+			
 			callBackFunction();
 			// Now delete the ZIP file (this is only here to save the SD-card's space, so there is more available for the coordinates).
 			applicationDirectory.getFile(LOCAL_PACKAGE_FILE_NAME, {
@@ -257,7 +262,7 @@ function downloadError(error) {
 }
 
 function displayError(errorMessage) {
-	$('.infoText').val();
+	$('.infoText').html(errorMessage);
 	$('.infoText').css('color', 'red');
 	$('.infoButton').css('display', 'none');
 }

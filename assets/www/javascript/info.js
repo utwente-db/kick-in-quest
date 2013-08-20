@@ -38,6 +38,7 @@ function readZIPFile(event, callBackFunction) {
 }
 
 function initInfoScreen() {
+	alert('iis');
 	$('#loaderBar').css('display', 'none');
 	
 	openFileSystemRead('json/info.json', startInfoScreen, true);
