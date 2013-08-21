@@ -35,6 +35,7 @@ function openAppFileSystem() {
 
 function onGetAppDirectory(directory) {
 	applicationDirectory = directory;
+	directories[''] = applicationDirectory;
 	$(document).trigger('appDirectory:loaded');
 }
 /*
@@ -113,7 +114,7 @@ function onFileSystemSuccess(downloadURI, destinationFileName, callBackFunction)
 }
 
 function downloadSuccess(theFile, callBackFunction)  {
-	$('.infoText').html('Download complete. Unzipping...');
+	$('.infoText').html('Download complete. Extracting...');
 	
 	if (applicationDirectory != null) {
 		openFileSystemRead(LOCAL_PACKAGE_FILE_NAME, callBackFunction);
@@ -164,11 +165,15 @@ function createZipFolders(callBackFunction) {
      
      var createdFolders = 0;
      
-     var onCreateDirectory = function(parent) {
+     var onCreateDirectory = function(dir) {
     	 ++createdFolders;
     	 
-    	 var progress = 50 + (createdFolders / foldersInZip) * 25;
-    	 $('loaderBarProgress').css('width', progress + '%');
+    	 var dirName = dir.fullPath.replace(applicationDirectory.fullPath, '');
+    	 
+    	 // Chop off "/"-prefix
+    	 dirName = dirName.substring(1);
+    	 
+    	 directories[dirName] = dir;
     	 
     	 if (createdFolders >= foldersInZip) {
     		 writeZipFiles(callBackFunction);
@@ -201,14 +206,50 @@ function writeZipFiles(callBackFunction) {
         var options = zipFile.files[filename].options || {};
 	    
 	    if (!options.dir) {
-        	applicationDirectory.getFile(filename, 
-        								 {create : true, exclusive : false}, 
-        								 function(fileEntry) { 
-        									 storeUnzippedFile(fileEntry, callBackFunction); 
-        								 }, 
-        								 fail);
+	    	var directory = applicationDirectory;
+	    	var shortFileName = filename;
+	    	
+	    	if (filename.lastIndexOf("/") > 0) {
+	    		directory = getDirectory(filename);
+	    		shortFileName = getFileName(filename);
+	    	}
+	    	
+        	directory.getFile(shortFileName, 
+							  {create : true, exclusive : false}, 
+							  function(fileEntry) { 
+								storeUnzippedFile(fileEntry, callBackFunction); 
+							  }, 
+							  fail);
         }
     }
+}
+
+var directories = new Array();
+
+function getDirectory(fileName) {
+	var dirName = getDirectoryName(fileName);
+	
+	if (directories[dirName] != undefined) {
+		return directories[dirName];
+	}
+	
+	alert('Directory ' + dirName + ' not found');
+}
+
+function getDirectoryName(fileName) {
+	if (!fileName.lastIndexOf("/") < 0) {
+		return "";
+	}
+	
+	return fileName.substring(0, fileName.lastIndexOf("/"));
+}
+
+function getFileName(fileName) {
+	if (!fileName.lastIndexOf("/") < 0) {
+		return fileName;
+	}
+	
+	return fileName.substring(fileName.lastIndexOf("/") + 1);
 }
 
 function storeUnzippedFile(fileEntry, callBackFunction) {
