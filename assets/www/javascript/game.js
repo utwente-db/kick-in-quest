@@ -84,11 +84,18 @@ function finishGame() {
 	resetPage();
 	
 	$('.answerCheck').css('display', 'block');
+	
+	var message = getTextItem("GAME_OVER") + "<br/><br/>";
+	
+	message += 'N ' + knownLatitude.replace(/%/g, asWarning('X')) + '<br/>';
+	message += 'E ' + knownLongitude.replace(/%/g, asWarning('X')) + '<br/><br/>';
+	message += knownPassword.replace(/%/g, asWarning('X')) + '<br/><br/>';
 
-	loadInfoPage(getTextItem("GAME_OVER") + "<br/><br/>", closeGame, getTextItem('CLICK_TO_CLOSE'));
+	loadInfoPage(message, closeGame, getTextItem('CLICK_TO_CLOSE'));
 }
 
 function closeGame() {
+	uploadGPSFile();
 	uploadAnswersFile(closeApp);
 }
 
