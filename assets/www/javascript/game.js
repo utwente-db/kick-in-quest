@@ -12,7 +12,7 @@ var scoreFileWriter = null;
 
 var knownLatitude = '??.??????';
 var knownLongitude = '?.??????';
-var knownPassword = '???????? ?????';
+var knownPassword = '??????';
 
 var lastGpsSignal = new Date().getTime();
 
@@ -362,7 +362,7 @@ function uploadGPSFile() {
 		return;
 	}
 	
-	uploadFile(applicationDirectory.fullPath + '/' + GPS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId}, resetGPSFile);
+	uploadFile(applicationDirectory.fullPath + '/' + GPS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'gps', teamId: teamId, deviceId: deviceId, language: language}, resetGPSFile);
 }
 
 function resetGPSFile() {
@@ -375,8 +375,7 @@ function resetGPSFileEntry(fileEntry) {
 }
 
 function uploadAnswersFile(callBackFunction) {
-	// TODO test this
-	uploadFile(applicationDirectory.fullPath + '/' + ANSWERS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'answers', teamId: teamId, deviceId: deviceId}, callBackFunction, notifyNoInternet);
+	uploadFile(applicationDirectory.fullPath + '/' + ANSWERS_FILE_NAME, ANSWER_QUESTIONS_URL, {dataType: 'answers', teamId: teamId, deviceId: deviceId, language: language}, callBackFunction, notifyNoInternet);
 }
 
 function notifyNoInternet() {
