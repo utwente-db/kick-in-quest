@@ -52,7 +52,6 @@ function nextInfoItem() {
 	id++;
 	
 	if (typeof data[id] == 'undefined') {
-		alert('undef')
 		goToGame();
 		return;
 	}

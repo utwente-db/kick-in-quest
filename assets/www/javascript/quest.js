@@ -66,13 +66,11 @@ function getBackgroundImageWidth() {
 }
 
 function loadInfoPage(infoText, callBackFunction, buttonText) {
-	alert('lip');
 	$('.infoText').html(infoText);
 	loadInfoButton(callBackFunction, buttonText);
 }
 
 function loadInfoButton(callBackFunction, buttonText) {
-	alert('lib');
 	$('.infoButton').html(buttonText);
 	
 	// Stop previous handlers for this button

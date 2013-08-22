@@ -14,11 +14,7 @@ function initFileSystem() {
 		return;
 	}
 	
-//	if (getPlatformName() == 'ios') {
-		window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, openFileSystem, failFS);
-//	} else {
-//		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, openFileSystem, failFS);
-//	}
+	window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, openFileSystem, failFS);
 }
 
 function openFileSystem(fileSystemParam) {
