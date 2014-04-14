@@ -265,7 +265,7 @@ function getTextItem(label) {
 
 function updateClock() {
 	// XXX: this should be loaded from game.json instead.
-	var endDate = new Date("August 24, 2013 13:00:00");
+	var endDate = new Date("August 28, 2013 13:00:00");
 	var now = new Date();
 	
 	var hoursToGo = endDate.getHours() - now.getHours();
